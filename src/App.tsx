@@ -72,7 +72,7 @@ const App = () => {
         <p>Start by searching for phrases...</p>
       )}
       <AddPhraseForm onAddPhrase={handleAddPhrase} categories={categories} />
-      <button onClick={handleExport}>Export Phrases</button>
+      <button onClick={handleExport}>Exportera fraser</button>
     </div>
   );
 };

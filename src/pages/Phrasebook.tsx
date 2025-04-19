@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import SearchBar from "../components/SearchBar";
 import { getPhrases, Phrase } from "../utils/phraseUtils";
 
@@ -15,16 +15,18 @@ const Phrasebook: React.FC = () => {
     fetchPhrases();
   }, []);
 
-  const handleSearch = (query: string) => {
+  const handleSearch = useCallback((query: string) => {
+    console.log("Search query received:", query); // Logga sökfrågan
+    console.log("Current phrases:", phrases); // Logga alla fraser
     const lowerQuery = query.toLowerCase();
-    setFilteredPhrases(
-      phrases.filter(
-        (phrase) =>
-          phrase.original.toLowerCase().includes(lowerQuery) ||
-          phrase.translation.toLowerCase().includes(lowerQuery)
-      )
+    const filtered = phrases.filter(
+      (phrase) =>
+        phrase.original.toLowerCase().includes(lowerQuery) ||
+        phrase.translation.toLowerCase().includes(lowerQuery)
     );
-  };
+    console.log("Filtered phrases:", filtered); // Logga filtrerade fraser
+    setFilteredPhrases(filtered);
+  }, [phrases]);
 
   return (
     <div>

@@ -1,33 +1,43 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import SearchBar from './components/SearchBar'; // Ny import
-import Phrasebook from './pages/Phrasebook'; // Importera Phrasebook
+import { useState, useEffect, useCallback } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import SearchBar from "./components/SearchBar";
+import PhraseList from "./components/PhraseList";
+import { getPhrases, Phrase } from "./utils/phraseUtils";
 
 const App = () => {
-  const handleSearch = (query: string) => {
-    console.log("Search query:", query); // Placeholder för söklogik
-  };
+  const [phrases, setPhrases] = useState<Phrase[]>([]);
+  const [filteredPhrases, setFilteredPhrases] = useState<Phrase[]>([]);
+  const [hasSearched, setHasSearched] = useState(false);
+
+  useEffect(() => {
+    const fetchPhrases = async () => {
+      const data = await getPhrases();
+      setPhrases(data);
+    };
+    fetchPhrases();
+  }, []);
+
+  const handleSearch = useCallback((query: string) => {
+    setHasSearched(true);
+    const lowerQuery = query.toLowerCase();
+    const filtered = phrases.filter(
+      (phrase) =>
+        phrase.original.toLowerCase().includes(lowerQuery) ||
+        phrase.translation.toLowerCase().includes(lowerQuery)
+    );
+    setFilteredPhrases(filtered);
+  }, [phrases]);
 
   return (
-    <Router>
-      <div className="d-flex">
-        <div className="content p-4">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  <SearchBar onSearch={handleSearch} /> {/* Lägg till SearchBar */}
-                  <h2>Menu</h2>
-                </>
-              }
-            />
-            <Route path="/phrasebook" element={<Phrasebook />} /> {/* Lägg till denna */}
-          </Routes>
-        </div>
-      </div>
-    </Router>
+    <div className="app">
+      <SearchBar onSearch={handleSearch} />
+      {hasSearched ? (
+        <PhraseList phrases={filteredPhrases} />
+      ) : (
+        <p>Start by searching for phrases...</p>
+      )}
+    </div>
   );
 };
 

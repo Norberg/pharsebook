@@ -1,0 +1,212 @@
+[
+  {
+    "created": "2023-01-01T12:00:00Z",
+    "original": "Hej",
+    "translation": "Ciao",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:01:00Z",
+    "original": "Hejdå",
+    "translation": "Arrivederci",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:02:00Z",
+    "original": "God morgon",
+    "translation": "Buongiorno",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:03:00Z",
+    "original": "God kväll",
+    "translation": "Buonasera",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:04:00Z",
+    "original": "God natt",
+    "translation": "Buonanotte",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:05:00Z",
+    "original": "Hur mår du?",
+    "translation": "Come stai?",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:06:00Z",
+    "original": "Jag mår bra",
+    "translation": "Sto bene",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:07:00Z",
+    "original": "Tack",
+    "translation": "Grazie",
+    "category": "Artighet",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:08:00Z",
+    "original": "Tack så mycket",
+    "translation": "Grazie mille",
+    "category": "Artighet",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:09:00Z",
+    "original": "Varsågod",
+    "translation": "Prego",
+    "category": "Artighet",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:10:00Z",
+    "original": "Ursäkta",
+    "translation": "Scusa / Mi scusi",
+    "category": "Artighet",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:11:00Z",
+    "original": "Förlåt",
+    "translation": "Mi dispiace",
+    "category": "Artighet",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:12:00Z",
+    "original": "Jag heter...",
+    "translation": "Mi chiamo...",
+    "category": "Presentation",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:13:00Z",
+    "original": "Vad heter du?",
+    "translation": "Come ti chiami?",
+    "category": "Presentation",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:14:00Z",
+    "original": "Jag är från Sverige",
+    "translation": "Vengo dalla Svezia",
+    "category": "Presentation",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:15:00Z",
+    "original": "Jag förstår inte",
+    "translation": "Non capisco",
+    "category": "Vardag",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:16:00Z",
+    "original": "Jag pratar inte italienska",
+    "translation": "Non parlo italiano",
+    "category": "Vardag",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:17:00Z",
+    "original": "Kan du hjälpa mig?",
+    "translation": "Puoi aiutarmi?",
+    "category": "Vardag",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:18:00Z",
+    "original": "Hur mycket kostar det?",
+    "translation": "Quanto costa?",
+    "category": "Shopping",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:19:00Z",
+    "original": "Toaletten, tack",
+    "translation": "Il bagno, per favore",
+    "category": "Vardag",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:20:00Z",
+    "original": "Jag är hungrig",
+    "translation": "Ho fame",
+    "category": "Vardag",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:21:00Z",
+    "original": "Jag är törstig",
+    "translation": "Ho sete",
+    "category": "Vardag",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:22:00Z",
+    "original": "En kaffe, tack",
+    "translation": "Un caffè, per favore",
+    "category": "Mat & dryck",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:23:00Z",
+    "original": "Var ligger hotellet?",
+    "translation": "Dov'è l'albergo?",
+    "category": "Resa",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:24:00Z",
+    "original": "Jag skulle vilja boka ett bord",
+    "translation": "Vorrei prenotare un tavolo",
+    "category": "Mat & dryck",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:25:00Z",
+    "original": "Kan jag få notan?",
+    "translation": "Il conto, per favore",
+    "category": "Mat & dryck",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:26:00Z",
+    "original": "Jag vill ha det här",
+    "translation": "Voglio questo",
+    "category": "Shopping",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:27:00Z",
+    "original": "Vilken tid öppnar ni?",
+    "translation": "A che ora aprite?",
+    "category": "Shopping",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:28:00Z",
+    "original": "Jag är trött",
+    "translation": "Sono stanco/a",
+    "category": "Vardag",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:29:00Z",
+    "original": "Trevligt att träffas",
+    "translation": "Piacere di conoscerti",
+    "category": "Presentation",
+    "favorite": false
+  }
+]

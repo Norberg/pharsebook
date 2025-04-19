@@ -1,0 +1,7 @@
+#Installation instructions:
+install nvm https://github.com/nvm-sh/nvm
+nvm install --lts
+npm install
+
+#Run
+nvm run dev

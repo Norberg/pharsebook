@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Phrase } from "../utils/phraseUtils";
+import "./AddPhraseForm.css";
 
 interface AddPhraseFormProps {
   onAddPhrase: (phrase: Phrase) => void;
@@ -7,6 +8,7 @@ interface AddPhraseFormProps {
 }
 
 const AddPhraseForm: React.FC<AddPhraseFormProps> = ({ onAddPhrase, categories }) => {
+  const [showForm, setShowForm] = useState(false);
   const [original, setOriginal] = useState("");
   const [translation, setTranslation] = useState("");
   const [category, setCategory] = useState("");
@@ -18,35 +20,71 @@ const AddPhraseForm: React.FC<AddPhraseFormProps> = ({ onAddPhrase, categories }
       setOriginal("");
       setTranslation("");
       setCategory("");
+      setShowForm(false);
     } else {
-      alert("Please fill in all fields and select a category.");
+      alert("Vänligen fyll i alla fält och välj en kategori.");
     }
   };
 
+  const handleCancel = () => {
+    setOriginal("");
+    setTranslation("");
+    setCategory("");
+    setShowForm(false);
+  };
+
+  if (!showForm) {
+    return (
+      <button onClick={() => setShowForm(true)}>
+        Lägg till fras
+      </button>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        placeholder="Original phrase"
-        value={original}
-        onChange={(e) => setOriginal(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Translation"
-        value={translation}
-        onChange={(e) => setTranslation(e.target.value)}
-      />
-      <select value={category} onChange={(e) => setCategory(e.target.value)}>
-        <option value="">Select category</option>
-        {categories.map((cat, index) => (
-          <option key={index} value={cat}>
-            {cat}
-          </option>
-        ))}
-      </select>
-      <button type="submit">Add Phrase</button>
-    </form>
+    <div className="formContainer">
+      <div className="heading">Fras:</div>
+      <form onSubmit={handleSubmit}>
+        <div className="inputRow">
+          <input
+            type="text"
+            placeholder="Original"
+            value={original}
+            onChange={(e) => setOriginal(e.target.value)}
+            className="inputField"
+          />
+        </div>
+        <div className="inputRow">
+          <input
+            type="text"
+            placeholder="Översättning"
+            value={translation}
+            onChange={(e) => setTranslation(e.target.value)}
+            className="inputField"
+          />
+        </div>
+        <div className="inputRow">
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="inputField"
+          >
+            <option value="">Välj kategori</option>
+            {categories.map((cat, index) => (
+              <option key={index} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="buttonGroup">
+          <button type="submit">Lägg till</button>
+          <button type="button" onClick={handleCancel}>
+            Avbryt
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 

@@ -59,7 +59,7 @@ const App = () => {
   };
 
   return (
-    <div className="app">
+    <div className="app-container">
       <SearchBar onSearch={handleSearch} />
       {hasSearched ? (
         <PhraseList

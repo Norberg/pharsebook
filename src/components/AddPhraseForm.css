@@ -1,0 +1,27 @@
+.formContainer {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 4px;
+  max-width: 1000px;
+}
+
+.heading {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.inputRow {
+  margin-bottom: 0.5rem;
+}
+
+.inputField {
+  width: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+}

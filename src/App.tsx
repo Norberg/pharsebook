@@ -5,6 +5,7 @@ import SearchBar from "./components/SearchBar";
 import PhraseList from "./components/PhraseList";
 import AddPhraseForm from "./components/AddPhraseForm";
 import { getPhrases, addPhrase, Phrase } from "./utils/phraseUtils";
+import { categories, getCategoryIcon } from "./components/categories";
 
 const App = () => {
   const [phrases, setPhrases] = useState<Phrase[]>([]);
@@ -31,7 +32,11 @@ const App = () => {
   }, [phrases]);
 
   const handleAddPhrase = async (newPhrase: Phrase) => {
-    await addPhrase(newPhrase); // Skriv till databasen
+    if (!categories.includes(newPhrase.category)) {
+      alert("Invalid category");
+      return;
+    }
+    await addPhrase(newPhrase);
     setPhrases((prevPhrases) => [...prevPhrases, newPhrase]);
     if (hasSearched) {
       setFilteredPhrases((prevFiltered) => [...prevFiltered, newPhrase]);
@@ -57,11 +62,16 @@ const App = () => {
     <div className="app">
       <SearchBar onSearch={handleSearch} />
       {hasSearched ? (
-        <PhraseList phrases={filteredPhrases} />
+        <PhraseList
+          phrases={filteredPhrases}
+          categoryIcons={Object.fromEntries(
+            categories.map((category) => [category, getCategoryIcon(category)])
+          )}
+        />
       ) : (
         <p>Start by searching for phrases...</p>
       )}
-      <AddPhraseForm onAddPhrase={handleAddPhrase} />
+      <AddPhraseForm onAddPhrase={handleAddPhrase} categories={categories} />
       <button onClick={handleExport}>Export Phrases</button>
     </div>
   );

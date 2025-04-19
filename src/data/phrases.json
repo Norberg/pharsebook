@@ -49,34 +49,6 @@
     "favorite": false
   },
   {
-    "created": "2023-01-01T12:07:00Z",
-    "original": "Tack",
-    "translation": "Grazie",
-    "category": "Artighet",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:08:00Z",
-    "original": "Tack så mycket",
-    "translation": "Grazie mille",
-    "category": "Artighet",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:09:00Z",
-    "original": "Varsågod",
-    "translation": "Prego",
-    "category": "Artighet",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:10:00Z",
-    "original": "Ursäkta",
-    "translation": "Scusa / Mi scusi",
-    "category": "Artighet",
-    "favorite": false
-  },
-  {
     "created": "2023-01-01T12:11:00Z",
     "original": "Förlåt",
     "translation": "Mi dispiace",
@@ -87,13 +59,6 @@
     "created": "2023-01-01T12:12:00Z",
     "original": "Jag heter...",
     "translation": "Mi chiamo...",
-    "category": "Presentation",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:13:00Z",
-    "original": "Vad heter du?",
-    "translation": "Come ti chiami?",
     "category": "Presentation",
     "favorite": false
   },
@@ -133,13 +98,6 @@
     "favorite": false
   },
   {
-    "created": "2023-01-01T12:19:00Z",
-    "original": "Toaletten, tack",
-    "translation": "Il bagno, per favore",
-    "category": "Vardag",
-    "favorite": false
-  },
-  {
     "created": "2023-01-01T12:20:00Z",
     "original": "Jag är hungrig",
     "translation": "Ho fame",
@@ -158,13 +116,6 @@
     "original": "En kaffe, tack",
     "translation": "Un caffè, per favore",
     "category": "Mat & dryck",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:23:00Z",
-    "original": "Var ligger hotellet?",
-    "translation": "Dov'è l'albergo?",
-    "category": "Resa",
     "favorite": false
   },
   {
@@ -189,16 +140,58 @@
     "favorite": false
   },
   {
-    "created": "2023-01-01T12:27:00Z",
-    "original": "Vilken tid öppnar ni?",
-    "translation": "A che ora aprite?",
-    "category": "Shopping",
-    "favorite": false
-  },
-  {
     "created": "2023-01-01T12:28:00Z",
     "original": "Jag är trött",
     "translation": "Sono stanco/a",
+    "category": "Vardag",
+    "favorite": false
+  },
+  {
+    "original": "Du är solen i mitt liv",
+    "translation": "Tu sei il sole della mia vita",
+    "category": "Artighet",
+    "created": "2025-04-19T13:24:58.367Z",
+    "favorite": false
+  },
+  {
+    "original": "När jag ser dig, skjuter mitt hjärta fyrverkerier",
+    "translation": "Quando ti vedo, il mio cuore spara fuochi d'artificio",
+    "category": "Kärlek",
+    "created": "2025-04-19T13:36:13.772Z",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:07:00Z",
+    "original": "Tack",
+    "translation": "Grazie",
+    "category": "Artighet",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:08:00Z",
+    "original": "Tack så mycket",
+    "translation": "Grazie mille",
+    "category": "Artighet",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:10:00Z",
+    "original": "Ursäkta",
+    "translation": "Scusa / Mi scusi",
+    "category": "Artighet",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:13:00Z",
+    "original": "Vad heter du?",
+    "translation": "Come ti chiami?",
+    "category": "Presentation",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:19:00Z",
+    "original": "Toaletten, tack",
+    "translation": "Il bagno, per favore",
     "category": "Vardag",
     "favorite": false
   },
@@ -207,6 +200,41 @@
     "original": "Trevligt att träffas",
     "translation": "Piacere di conoscerti",
     "category": "Presentation",
+    "favorite": false
+  },
+  {
+    "original": "Trevlig resa",
+    "translation": "Buon viaggio",
+    "category": "Resa",
+    "created": "2025-04-19T17:24:05.749Z",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:09:00Z",
+    "original": "Varsågod",
+    "translation": "Prego",
+    "category": "Artighet",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:23:00Z",
+    "original": "Var ligger hotellet?",
+    "translation": "Dov'è l'albergo?",
+    "category": "Resa",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:27:00Z",
+    "original": "Vilken tid öppnar ni?",
+    "translation": "A che ora aprite?",
+    "category": "Shopping",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är kvart över åtta",
+    "translation": "Sono le otto e un quarto",
+    "category": "Tid",
+    "created": "2025-04-19T17:44:46.356Z",
     "favorite": false
   }
 ]

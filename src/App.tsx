@@ -50,6 +50,18 @@ const App = () => {
       alert("Invalid category");
       return;
     }
+
+    // Check if the phrase already exists
+    const exists = phrases.some(
+      (p) =>
+        p.original.toLowerCase() === newPhrase.original.toLowerCase() &&
+        p.translation.toLowerCase() === newPhrase.translation.toLowerCase()
+    );
+    if (exists) {
+      alert("This phrase already exists!");
+      return;
+    }
+
     await addPhrase(newPhrase);
     setPhrases((prev) => [...prev, newPhrase]);
     if (hasSearched) {
@@ -63,6 +75,19 @@ const App = () => {
       alert("Invalid category");
       return;
     }
+
+    // Check if the updated phrase already exists (excluding the one being edited)
+    const exists = phrases.some(
+      (p) =>
+        p.original.toLowerCase() === updatedPhrase.original.toLowerCase() &&
+        p.translation.toLowerCase() === updatedPhrase.translation.toLowerCase() &&
+        p.compositeKey !== editingPhrase?.compositeKey
+    );
+    if (exists) {
+      alert("This phrase already exists!");
+      return;
+    }
+
     if (editingPhrase) {
       await removePhrase(editingPhrase);
     }

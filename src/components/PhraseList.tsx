@@ -1,8 +1,7 @@
 import React from "react";
 import { Phrase } from "../utils/phraseUtils";
 import { FaEdit } from "react-icons/fa";
-import "./PhraseList.css"; // Importera CSS
-
+import "./PhraseList.css";
 interface PhraseListProps {
   phrases: Phrase[];
   categoryIcons: Record<string, JSX.Element>;

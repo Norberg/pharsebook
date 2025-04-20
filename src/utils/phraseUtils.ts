@@ -1,6 +1,6 @@
 import { openDB } from "idb";
 import phrasesData from "../data/phrases.json";
-console.log("Loaded phrases data:", phrasesData); // Lägg till denna logg
+console.log(`Loaded ${phrasesData.length} phrases from JSON file.`);
 
 export interface Phrase {
   created: string;
@@ -62,7 +62,7 @@ export const syncDefaultPhrases = async (): Promise<void> => {
 export const getPhrases = async (query?: string): Promise<Phrase[]> => {
   const db = await initDatabase();
   const allPhrases = await db.getAll(STORE_NAME);
-  console.log("Fetched phrases from DB:", allPhrases); // Logga hämtade fraser
+  console.log(`Fetched ${allPhrases.length} phrases from the database`);
 
   if (!query) return allPhrases;
 
@@ -93,6 +93,5 @@ export const deletePhrase = async (original: string, translation: string) => {
 export const removePhrase = async (phrase: Phrase): Promise<void> => {
   const db = await initDatabase();
   const compositeKey = phrase.original + "::" + phrase.translation;
-  console.log("Removing phrase with composite key:", compositeKey); // Logga den borttagna frasen
   await db.delete(STORE_NAME, compositeKey);
 };

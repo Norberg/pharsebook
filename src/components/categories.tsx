@@ -1,4 +1,4 @@
-import { FaTag, FaHandHolding, FaHandshake, FaUtensils, FaClock, FaComment, FaComments, FaHeart } from "react-icons/fa";
+import { FaTag, FaHandHolding, FaUtensils, FaClock, FaComments, FaHeart } from "react-icons/fa";
 import { FaPlane } from "react-icons/fa6";
 
 export const categoryIcons: Record<string, JSX.Element> = {

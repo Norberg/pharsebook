@@ -155,7 +155,6 @@ const App = () => {
             categories.map((category) => [category, getCategoryIcon(category)])
           )}
           onEdit={(phrase) => {
-            console.log("Editing phrase:", phrase);
             setEditingPhrase(phrase);
             setShowForm(true);
           }}

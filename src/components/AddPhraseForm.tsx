@@ -25,7 +25,6 @@ const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
 
   useEffect(() => {
     if (phraseToEdit) {
-      console.log("Editing mode activated with phrase:", phraseToEdit); // Logga redigeringsläget
       setOriginal(phraseToEdit.original);
       setTranslation(phraseToEdit.translation);
       setCategory(phraseToEdit.category);

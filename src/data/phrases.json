@@ -1,9 +1,149 @@
 [
   {
+    "created": "2023-01-01T12:00:00Z",
+    "original": "Hej",
+    "translation": "Ciao",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:01:00Z",
+    "original": "Hejdå",
+    "translation": "Arrivederci",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:02:00Z",
+    "original": "God morgon",
+    "translation": "Buongiorno",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:03:00Z",
+    "original": "God kväll",
+    "translation": "Buonasera",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:04:00Z",
+    "original": "God natt",
+    "translation": "Buonanotte",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:05:00Z",
+    "original": "Hur mår du?",
+    "translation": "Come stai?",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:06:00Z",
+    "original": "Jag mår bra",
+    "translation": "Sto bene",
+    "category": "Hälsningar",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:07:00Z",
+    "original": "Tack",
+    "translation": "Grazie",
+    "category": "Artighet",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:08:00Z",
+    "original": "Tack så mycket",
+    "translation": "Grazie mille",
+    "category": "Artighet",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:09:00Z",
+    "original": "Varsågod",
+    "translation": "Prego",
+    "category": "Artighet",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:10:00Z",
+    "original": "Ursäkta",
+    "translation": "Scusa / Mi scusi",
+    "category": "Artighet",
+    "favorite": false
+  },
+  {
     "created": "2023-01-01T12:11:00Z",
     "original": "Förlåt",
     "translation": "Mi dispiace",
     "category": "Artighet",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:12:00Z",
+    "original": "Jag heter...",
+    "translation": "Mi chiamo...",
+    "category": "Presentation",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:13:00Z",
+    "original": "Vad heter du?",
+    "translation": "Come ti chiami?",
+    "category": "Presentation",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:14:00Z",
+    "original": "Jag är från Sverige",
+    "translation": "Vengo dalla Svezia",
+    "category": "Presentation",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:15:00Z",
+    "original": "Jag förstår inte",
+    "translation": "Non capisco",
+    "category": "Vardag",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:16:00Z",
+    "original": "Jag pratar inte italienska",
+    "translation": "Non parlo italiano",
+    "category": "Vardag",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:17:00Z",
+    "original": "Kan du hjälpa mig?",
+    "translation": "Puoi aiutarmi?",
+    "category": "Vardag",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:18:00Z",
+    "original": "Hur mycket kostar det?",
+    "translation": "Quanto costa?",
+    "category": "Shopping",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:20:00Z",
+    "original": "Jag är hungrig",
+    "translation": "Ho fame",
+    "category": "Vardag",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:21:00Z",
+    "original": "Jag är törstig",
+    "translation": "Ho sete",
+    "category": "Vardag",
     "favorite": false
   },
   {
@@ -14,10 +154,80 @@
     "favorite": false
   },
   {
+    "created": "2023-01-01T12:23:00Z",
+    "original": "Var ligger hotellet?",
+    "translation": "Dov'è l'albergo?",
+    "category": "Resa",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:24:00Z",
+    "original": "Jag skulle vilja boka ett bord",
+    "translation": "Vorrei prenotare un tavolo",
+    "category": "Mat & dryck",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:25:00Z",
+    "original": "Kan jag få notan?",
+    "translation": "Il conto, per favore",
+    "category": "Mat & dryck",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:26:00Z",
+    "original": "Jag vill ha det här",
+    "translation": "Voglio questo",
+    "category": "Shopping",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:27:00Z",
+    "original": "Vilken tid öppnar ni?",
+    "translation": "A che ora aprite?",
+    "category": "Shopping",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:28:00Z",
+    "original": "Jag är trött",
+    "translation": "Sono stanco/a",
+    "category": "Vardag",
+    "favorite": false
+  },
+  {
+    "created": "2023-01-01T12:29:00Z",
+    "original": "Trevligt att träffas",
+    "translation": "Piacere di conoscerti",
+    "category": "Presentation",
+    "favorite": false
+  },
+  {
     "original": "Du är solen i mitt liv",
     "translation": "Tu sei il sole della mia vita",
     "category": "Artighet",
     "created": "2025-04-19T13:24:58.367Z",
+    "favorite": false
+  },
+  {
+    "original": "När jag ser dig, skjuter mitt hjärta fyrverkerier",
+    "translation": "Quando ti vedo, il mio cuore spara fuochi d'artificio",
+    "category": "Kärlek",
+    "created": "2025-04-19T13:36:13.772Z",
+    "favorite": false
+  },
+  {
+    "original": "Trevlig resa",
+    "translation": "Buon viaggio",
+    "category": "Resa",
+    "created": "2025-04-19T17:24:05.749Z",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är kvart över åtta",
+    "translation": "Sono le otto e un quarto",
+    "category": "Tid",
+    "created": "2025-04-19T17:44:46.356Z",
     "favorite": false
   },
   {
@@ -33,13 +243,6 @@
     "created": "2025-04-20T07:16:57.723513+00:00",
     "category": "Hälsningar",
     "favorite": false
-  },
-  {
-    "original": "Den här veckan",
-    "translation": "Questa settimana",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
   },
   {
     "original": "Det här är för salt",
@@ -61,20 +264,6 @@
     "created": "2025-04-20T07:16:57.723513+00:00",
     "category": "Mat & dryck",
     "favorite": false
-  },
-  {
-    "original": "Det tar en timme",
-    "translation": "Ci vuole un'ora",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "Det tar fem minuter",
-    "translation": "Ci vogliono cinque minuti",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
   },
   {
     "original": "Det var länge sen",
@@ -210,83 +399,6 @@
     "favorite": false
   },
   {
-    "original": "En huvudrätt( som på italienska kan var först och andra rätt)",
-    "translation": "Un primo piatto, per favore. Un secondo piatto",
-    "category": "Mat & dryck",
-    "created": "2025-04-20T13:09:02.569Z",
-    "favorite": false
-  },
-  {
-    "original": "En andra rätt med tillbehör ",
-    "translation": "Un secondo con contorno ",
-    "category": "Mat & dryck",
-    "created": "2025-04-20T13:09:55.358Z",
-    "favorite": false
-  },
-  {
-    "original": "Förra veckan",
-    "translation": "La settimana scorsa",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "Förra året",
-    "translation": "L'anno scorso",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "created": "2023-01-01T12:00:00Z",
-    "original": "Hej",
-    "translation": "Ciao",
-    "category": "Hälsningar",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:01:00Z",
-    "original": "Hejdå",
-    "translation": "Arrivederci",
-    "category": "Hälsningar",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:02:00Z",
-    "original": "God morgon",
-    "translation": "Buongiorno",
-    "category": "Hälsningar",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:03:00Z",
-    "original": "God kväll",
-    "translation": "Buonasera",
-    "category": "Hälsningar",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:04:00Z",
-    "original": "God natt",
-    "translation": "Buonanotte",
-    "category": "Hälsningar",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:05:00Z",
-    "original": "Hur mår du?",
-    "translation": "Come stai?",
-    "category": "Hälsningar",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:18:00Z",
-    "original": "Hur mycket kostar det?",
-    "translation": "Quanto costa?",
-    "category": "Shopping",
-    "favorite": false
-  },
-  {
     "original": "God eftermiddag",
     "translation": "Buon pomeriggio",
     "created": "2025-04-20T07:16:57.723513+00:00",
@@ -392,13 +504,6 @@
     "favorite": false
   },
   {
-    "original": "Hur länge tar det?",
-    "translation": "Quanto tempo ci vuole?",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
     "original": "Hur lång tid tar det?",
     "translation": "Quanto tempo ci vuole?",
     "created": "2025-04-20T07:16:57.723513+00:00",
@@ -438,146 +543,6 @@
     "translation": "Come va?",
     "created": "2025-04-20T07:16:57.723513+00:00",
     "category": "Hälsningar",
-    "favorite": false
-  },
-  {
-    "original": "I dag",
-    "translation": "Oggi",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "I går",
-    "translation": "Ieri",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "I morgon",
-    "translation": "Domani",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "I somras",
-    "translation": "Quest'estate",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "I vintras",
-    "translation": "Quest'inverno",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "I år",
-    "translation": "Quest'anno",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "I övermorgon",
-    "translation": "Dopodomani",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "created": "2023-01-01T12:06:00Z",
-    "original": "Jag mår bra",
-    "translation": "Sto bene",
-    "category": "Hälsningar",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:12:00Z",
-    "original": "Jag heter...",
-    "translation": "Mi chiamo...",
-    "category": "Presentation",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:14:00Z",
-    "original": "Jag är från Sverige",
-    "translation": "Vengo dalla Svezia",
-    "category": "Presentation",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:15:00Z",
-    "original": "Jag förstår inte",
-    "translation": "Non capisco",
-    "category": "Vardag",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:16:00Z",
-    "original": "Jag pratar inte italienska",
-    "translation": "Non parlo italiano",
-    "category": "Vardag",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:17:00Z",
-    "original": "Kan du hjälpa mig?",
-    "translation": "Puoi aiutarmi?",
-    "category": "Vardag",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:20:00Z",
-    "original": "Jag är hungrig",
-    "translation": "Ho fame",
-    "category": "Vardag",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:21:00Z",
-    "original": "Jag är törstig",
-    "translation": "Ho sete",
-    "category": "Vardag",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:24:00Z",
-    "original": "Jag skulle vilja boka ett bord",
-    "translation": "Vorrei prenotare un tavolo",
-    "category": "Mat & dryck",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:25:00Z",
-    "original": "Kan jag få notan?",
-    "translation": "Il conto, per favore",
-    "category": "Mat & dryck",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:26:00Z",
-    "original": "Jag vill ha det här",
-    "translation": "Voglio questo",
-    "category": "Shopping",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:28:00Z",
-    "original": "Jag är trött",
-    "translation": "Sono stanco/a",
-    "category": "Vardag",
-    "favorite": false
-  },
-  {
-    "original": "När jag ser dig, skjuter mitt hjärta fyrverkerier",
-    "translation": "Quando ti vedo, il mio cuore spara fuochi d'artificio",
-    "category": "Kärlek",
-    "created": "2025-04-19T13:36:13.772Z",
     "favorite": false
   },
   {
@@ -791,55 +756,6 @@
     "favorite": false
   },
   {
-    "original": "Jag skulle vilja ha 100 gram riven parmesan ",
-    "translation": "Vorrei cento grammi (/un etto) parmigiano grattugiato, per favore ",
-    "category": "Shopping",
-    "created": "2025-04-20T13:16:58.226Z",
-    "favorite": false
-  },
-  {
-    "original": "Klockan är fem över elva",
-    "translation": "Sono le undici e cinque",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "Klockan är halv tre",
-    "translation": "Sono le due e mezza",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "Klockan är kvart över åtta",
-    "translation": "Sono le otto e un quarto",
-    "category": "Tid",
-    "created": "2025-04-19T17:44:46.356Z",
-    "favorite": false
-  },
-  {
-    "original": "Klockan är midnatt",
-    "translation": "È mezzanotte",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "Klockan är prick tolv",
-    "translation": "È mezzogiorno in punto",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "Klockan är tio i nio",
-    "translation": "Sono le nove meno dieci",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
     "original": "Länge sen sist",
     "translation": "È da tanto che non ci vediamo",
     "created": "2025-04-20T07:16:57.723513+00:00",
@@ -852,13 +768,6 @@
     "created": "2025-04-20T07:16:57.723513+00:00",
     "category": "Hälsningar",
     "favorite": false
-  },
-  {
-    "original": "När börjar det?",
-    "translation": "Quando inizia?",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
   },
   {
     "original": "När går färjan?",
@@ -875,13 +784,6 @@
     "favorite": false
   },
   {
-    "original": "När slutar det?",
-    "translation": "Quando finisce?",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
     "original": "När är det rea?",
     "translation": "Quando ci sono i saldi?",
     "created": "2025-04-20T07:16:57.723513+00:00",
@@ -896,115 +798,10 @@
     "favorite": false
   },
   {
-    "original": "Nästa vecka",
-    "translation": "La prossima settimana",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "Nästa år",
-    "translation": "L'anno prossimo",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "På eftermiddagen",
-    "translation": "Di pomeriggio",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "På kvällen",
-    "translation": "Di sera",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "På morgonen",
-    "translation": "Di mattina",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "original": "På natten",
-    "translation": "Di notte",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "created": "2023-01-01T12:09:00Z",
-    "original": "Varsågod",
-    "translation": "Prego",
-    "category": "Artighet",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:10:00Z",
-    "original": "Ursäkta",
-    "translation": "Scusa / Mi scusi",
-    "category": "Artighet",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:13:00Z",
-    "original": "Vad heter du?",
-    "translation": "Come ti chiami?",
-    "category": "Presentation",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:23:00Z",
-    "original": "Var ligger hotellet?",
-    "translation": "Dov'è l'albergo?",
-    "category": "Resa",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:29:00Z",
-    "original": "Trevligt att träffas",
-    "translation": "Piacere di conoscerti",
-    "category": "Presentation",
-    "favorite": false
-  },
-  {
-    "original": "Trevlig resa",
-    "translation": "Buon viaggio",
-    "category": "Resa",
-    "created": "2025-04-19T17:24:05.749Z",
-    "favorite": false
-  },
-  {
     "original": "På återseende",
     "translation": "Arrivederci",
     "created": "2025-04-20T07:16:57.723513+00:00",
     "category": "Hälsningar",
-    "favorite": false
-  },
-  {
-    "original": "Sent på kvällen",
-    "translation": "Tardi la sera",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "created": "2023-01-01T12:07:00Z",
-    "original": "Tack",
-    "translation": "Grazie",
-    "category": "Artighet",
-    "favorite": false
-  },
-  {
-    "created": "2023-01-01T12:08:00Z",
-    "original": "Tack så mycket",
-    "translation": "Grazie mille",
-    "category": "Artighet",
     "favorite": false
   },
   {
@@ -1027,13 +824,6 @@
     "created": "2025-04-20T07:16:57.723513+00:00",
     "category": "Hälsningar",
     "favorite": false
-  },
-  {
-    "original": "Tidigt på morgonen",
-    "translation": "La mattina presto",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
   },
   {
     "original": "Tjena!",
@@ -1111,13 +901,6 @@
     "created": "2025-04-20T07:16:57.723513+00:00",
     "category": "Mat & dryck",
     "favorite": false
-  },
-  {
-    "original": "Vad är klockan?",
-    "translation": "Che ore sono?",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
   },
   {
     "original": "Var finns kassan?",
@@ -1211,41 +994,6 @@
     "favorite": false
   },
   {
-    "original": "Var ligger toaletten?",
-    "translation": "Il bagno, per favore?",
-    "category": "Vardag",
-    "created": "2025-04-20T13:12:15.532Z",
-    "favorite": false
-  },
-  {
-    "original": "Var är toaletten?",
-    "translation": "Dov'è il bagno, per favore?",
-    "category": "Vardag",
-    "created": "2025-04-20T13:13:21.761Z",
-    "favorite": false
-  },
-  {
-    "original": "Vi är redo att beställa",
-    "translation": "Siamo pronti ad ordinare",
-    "category": "Mat & dryck",
-    "created": "2025-04-20T13:14:40.353Z",
-    "favorite": false
-  },
-  {
-    "original": "Vilken dag är det?",
-    "translation": "Che giorno è?",
-    "category": "Tid",
-    "favorite": false,
-    "created": "2025-04-20T16:16:01.424Z"
-  },
-  {
-    "created": "2023-01-01T12:27:00Z",
-    "original": "Vilken tid öppnar ni?",
-    "translation": "A che ora aprite?",
-    "category": "Shopping",
-    "favorite": false
-  },
-  {
     "original": "Vilken väg ska jag ta?",
     "translation": "Quale strada devo prendere?",
     "created": "2025-04-20T07:16:57.723513+00:00",
@@ -1279,5 +1027,257 @@
     "created": "2025-04-20T07:16:57.723513+00:00",
     "category": "Shopping",
     "favorite": false
+  },
+  {
+    "original": "En huvudrätt( som på italienska kan var först och andra rätt)",
+    "translation": "Un primo piatto, per favore. Un secondo piatto",
+    "category": "Mat & dryck",
+    "created": "2025-04-20T13:09:02.569Z",
+    "favorite": false
+  },
+  {
+    "original": "En andra rätt med tillbehör ",
+    "translation": "Un secondo con contorno ",
+    "category": "Mat & dryck",
+    "created": "2025-04-20T13:09:55.358Z",
+    "favorite": false
+  },
+  {
+    "original": "Var ligger toaletten?",
+    "translation": "Il bagno, per favore?",
+    "category": "Vardag",
+    "created": "2025-04-20T13:12:15.532Z",
+    "favorite": false
+  },
+  {
+    "original": "Var är toaletten?",
+    "translation": "Dov'è il bagno, per favore?",
+    "category": "Vardag",
+    "created": "2025-04-20T13:13:21.761Z",
+    "favorite": false
+  },
+  {
+    "original": "Vi är redo att beställa",
+    "translation": "Siamo pronti ad ordinare",
+    "category": "Mat & dryck",
+    "created": "2025-04-20T13:14:40.353Z",
+    "favorite": false
+  },
+  {
+    "original": "Jag skulle vilja ha 100 gram riven parmesan ",
+    "translation": "Vorrei cento grammi (/un etto) parmigiano grattugiato, per favore ",
+    "category": "Shopping",
+    "created": "2025-04-20T13:16:58.226Z",
+    "favorite": false
+  },
+  {
+    "original": "Den här veckan",
+    "translation": "Questa settimana",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Det tar en timme",
+    "translation": "Ci vuole un'ora",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Det tar fem minuter",
+    "translation": "Ci vogliono cinque minuti",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Förra veckan",
+    "translation": "La settimana scorsa",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Förra året",
+    "translation": "L'anno scorso",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Hur länge tar det?",
+    "translation": "Quanto tempo ci vuole?",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "I dag",
+    "translation": "Oggi",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "I går",
+    "translation": "Ieri",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "I morgon",
+    "translation": "Domani",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "I somras",
+    "translation": "Quest'estate",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "I vintras",
+    "translation": "Quest'inverno",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "I år",
+    "translation": "Quest'anno",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "I övermorgon",
+    "translation": "Dopodomani",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Klockan är fem över elva",
+    "translation": "Sono le undici e cinque",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Klockan är halv tre",
+    "translation": "Sono le due e mezza",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Klockan är midnatt",
+    "translation": "È mezzanotte",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Klockan är prick tolv",
+    "translation": "È mezzogiorno in punto",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Klockan är tio i nio",
+    "translation": "Sono le nove meno dieci",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "När börjar det?",
+    "translation": "Quando inizia?",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "När slutar det?",
+    "translation": "Quando finisce?",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Nästa vecka",
+    "translation": "La prossima settimana",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Nästa år",
+    "translation": "L'anno prossimo",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "På eftermiddagen",
+    "translation": "Di pomeriggio",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "På kvällen",
+    "translation": "Di sera",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "På morgonen",
+    "translation": "Di mattina",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "På natten",
+    "translation": "Di notte",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Sent på kvällen",
+    "translation": "Tardi la sera",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Tidigt på morgonen",
+    "translation": "La mattina presto",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Vad är klockan?",
+    "translation": "Che ore sono?",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Vilken dag är det?",
+    "translation": "Che giorno è?",
+    "category": "Tid",
+    "favorite": false,
+    "created": "2025-04-20T16:16:01.424Z"
   }
 ]

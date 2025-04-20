@@ -122,14 +122,12 @@ const App = () => {
             !(p.original === editingPhrase.original && p.translation === editingPhrase.translation)
         )
       );
-      if (hasSearched) {
-        setFilteredPhrases((prev) =>
-          prev.filter(
-            (p) =>
-              !(p.original === editingPhrase.original && p.translation === editingPhrase.translation)
-          )
-        );
-      }
+      setFilteredPhrases((prev) =>
+        prev.filter(
+          (p) =>
+            !(p.original === editingPhrase.original && p.translation === editingPhrase.translation)
+        )
+      );
       setEditingPhrase(null);
       setShowForm(false);
     }

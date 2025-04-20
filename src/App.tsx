@@ -96,24 +96,19 @@ const App = () => {
       await removePhrase(editingPhrase);
     }
     await addPhrase(updatedPhrase);
+
+    // Update phrases and filteredPhrases to reflect the category change
     setPhrases((prev) =>
       prev.map((p) =>
-        p.original === editingPhrase?.original &&
-        p.translation === editingPhrase?.translation
-          ? updatedPhrase
-          : p
+        p.compositeKey === editingPhrase?.compositeKey ? updatedPhrase : p
       )
     );
-    if (hasSearched) {
-      setFilteredPhrases((prev) =>
-        prev.map((p) =>
-          p.original === editingPhrase?.original &&
-          p.translation === editingPhrase?.translation
-            ? updatedPhrase
-            : p
-        )
-      );
-    }
+    setFilteredPhrases((prev) =>
+      prev.map((p) =>
+        p.compositeKey === editingPhrase?.compositeKey ? updatedPhrase : p
+      )
+    );
+  
     setEditingPhrase(null);
     setShowForm(false);
   };

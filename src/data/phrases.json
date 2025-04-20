@@ -1279,5 +1279,166 @@
     "category": "Mat & dryck",
     "created": "2025-04-20T17:42:43.716Z",
     "favorite": false
+  },
+  {
+    "original": "Fredagar är mina favoritdagar",
+    "translation": "Il venerdì è il mio giorno preferito",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Igår var det tisdag",
+    "translation": "Ieri era martedì",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Imorgon är det måndag",
+    "translation": "Domani è lunedì",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 1",
+    "translation": "Sono le una",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 10 i 2",
+    "translation": "Sono le due meno dieci",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 10 över 1",
+    "translation": "Sono le una e dieci",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 15 i 2",
+    "translation": "Sono le due meno un quarto",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 15 över 1",
+    "translation": "Sono le una e un quarto",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 2 på eftermiddagen",
+    "translation": "Sono le due del pomeriggio",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 2 på natten",
+    "translation": "Sono le due di notte",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 20 i 2",
+    "translation": "Sono le due meno venti",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 20 över 1",
+    "translation": "Sono le una e venti",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 25 i 2",
+    "translation": "Sono le due meno venticinque",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 25 över 1",
+    "translation": "Sono le una e venticinque",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 30 över 1",
+    "translation": "Sono le una e mezzo",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 5 i 2",
+    "translation": "Sono le due meno cinque",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 5 över 1",
+    "translation": "Sono le una e cinque",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 8 på kvällen",
+    "translation": "Sono le otto di sera",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Klockan är 8 på morgonen",
+    "translation": "Sono le otto del mattino",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "På torsdag ska vi till stranden",
+    "translation": "Giovedì andiamo in spiaggia",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Vi kom hit i onsdags",
+    "translation": "Siamo arrivati mercoledì",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Vi reser på söndag",
+    "translation": "Partiamo domenica",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
+  },
+  {
+    "original": "Vi åker hem på lördag",
+    "translation": "Torniamo a casa sabato",
+    "created": "2025-04-20T17:47:05.453697+00:00",
+    "category": "Tid",
+    "favorite": false
   }
 ]

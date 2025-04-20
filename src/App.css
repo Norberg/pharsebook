@@ -109,3 +109,7 @@ button:focus {
 .phrase-item:last-child {
   margin-bottom: 0;
 }
+
+.emoji {
+  font-size: 1.5rem;
+}

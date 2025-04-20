@@ -203,20 +203,6 @@
     "favorite": false
   },
   {
-    "original": "Du är solen i mitt liv",
-    "translation": "Tu sei il sole della mia vita",
-    "category": "Artighet",
-    "created": "2025-04-19T13:24:58.367Z",
-    "favorite": false
-  },
-  {
-    "original": "När jag ser dig, skjuter mitt hjärta fyrverkerier",
-    "translation": "Quando ti vedo, il mio cuore spara fuochi d'artificio",
-    "category": "Kärlek",
-    "created": "2025-04-19T13:36:13.772Z",
-    "favorite": false
-  },
-  {
     "original": "Trevlig resa",
     "translation": "Buon viaggio",
     "category": "Resa",
@@ -434,13 +420,6 @@
     "favorite": false
   },
   {
-    "original": "Hallå där!",
-    "translation": "Ehilà!",
-    "created": "2025-04-20T07:16:57.723513+00:00",
-    "category": "Hälsningar",
-    "favorite": false
-  },
-  {
     "original": "Har ni den i en annan storlek?",
     "translation": "Ce l'avete in un'altra taglia?",
     "created": "2025-04-20T07:16:57.723513+00:00",
@@ -478,13 +457,6 @@
   {
     "original": "Hej på dig!",
     "translation": "Ciao a te!",
-    "created": "2025-04-20T07:16:57.723513+00:00",
-    "category": "Hälsningar",
-    "favorite": false
-  },
-  {
-    "original": "Hejsan",
-    "translation": "Ciaone / Ciao ciao",
     "created": "2025-04-20T07:16:57.723513+00:00",
     "category": "Hälsningar",
     "favorite": false
@@ -655,13 +627,6 @@
     "translation": "Vorrei provarlo",
     "created": "2025-04-20T07:16:57.723513+00:00",
     "category": "Shopping",
-    "favorite": false
-  },
-  {
-    "original": "Jag är allergisk mot nötter",
-    "translation": "Sono allergico/a alle noci",
-    "created": "2025-04-20T07:16:57.723513+00:00",
-    "category": "Mat & dryck",
     "favorite": false
   },
   {
@@ -1029,13 +994,6 @@
     "favorite": false
   },
   {
-    "original": "En huvudrätt( som på italienska kan var först och andra rätt)",
-    "translation": "Un primo piatto, per favore. Un secondo piatto",
-    "category": "Mat & dryck",
-    "created": "2025-04-20T13:09:02.569Z",
-    "favorite": false
-  },
-  {
     "original": "En andra rätt med tillbehör ",
     "translation": "Un secondo con contorno ",
     "category": "Mat & dryck",
@@ -1279,5 +1237,47 @@
     "category": "Tid",
     "favorite": false,
     "created": "2025-04-20T16:16:01.424Z"
+  },
+  {
+    "original": "Jag skulle vilja ha en biff",
+    "translation": "Vorrei unta bistecca",
+    "category": "Mat & dryck",
+    "created": "2025-04-20T17:23:20.750Z",
+    "favorite": false
+  },
+  {
+    "original": "Jag vill ha en öl",
+    "translation": "Vorrei una birra",
+    "category": "Mat & dryck",
+    "created": "2025-04-20T17:24:08.108Z",
+    "favorite": false
+  },
+  {
+    "original": "Bra, och du?",
+    "translation": "Molto bene, e tu?",
+    "category": "Hälsningar",
+    "created": "2025-04-20T17:26:13.305Z",
+    "favorite": false
+  },
+  {
+    "original": "Du är solen i mitt liv",
+    "translation": "Tu sei il sole della mia vita",
+    "category": "Kärlek",
+    "created": "2025-04-20T17:37:28.037Z",
+    "favorite": false
+  },
+  {
+    "original": "När jag ser dig, skjuter mitt hjärta fyrverkerier",
+    "translation": "Quando ti vedo, il mio cuore spara fuochi d'artificio",
+    "category": "Kärlek",
+    "created": "2025-04-20T17:37:52.373Z",
+    "favorite": false
+  },
+  {
+    "original": "En huvudrätt (som på italienska kan var först och andra rätt)",
+    "translation": "Un primo piatto, per favore. Un secondo piatto",
+    "category": "Mat & dryck",
+    "created": "2025-04-20T17:42:43.716Z",
+    "favorite": false
   }
 ]

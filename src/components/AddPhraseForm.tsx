@@ -1,90 +1,101 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Phrase } from "../utils/phraseUtils";
 import "./AddPhraseForm.css";
 
 interface AddPhraseFormProps {
   onAddPhrase: (phrase: Phrase) => void;
   categories: string[];
+  phraseToEdit?: Phrase;
+  onEditPhrase?: (updatedPhrase: Phrase) => void;
+  onCancel?: () => void;
 }
 
-const AddPhraseForm: React.FC<AddPhraseFormProps> = ({ onAddPhrase, categories }) => {
-  const [showForm, setShowForm] = useState(false);
+const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
+  onAddPhrase,
+  categories,
+  phraseToEdit,
+  onEditPhrase,
+  onCancel,
+}) => {
   const [original, setOriginal] = useState("");
   const [translation, setTranslation] = useState("");
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState(categories[0]);
+
+  useEffect(() => {
+    if (phraseToEdit) {
+      console.log("Editing mode activated with phrase:", phraseToEdit); // Logga redigeringsläget
+      setOriginal(phraseToEdit.original);
+      setTranslation(phraseToEdit.translation);
+      setCategory(phraseToEdit.category);
+    } else {
+      setOriginal("");
+      setTranslation("");
+      setCategory(categories[0]);
+    }
+  }, [phraseToEdit, categories]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (original && translation && category) {
-      onAddPhrase({ original, translation, category, created: new Date().toISOString(), favorite: false });
-      setOriginal("");
-      setTranslation("");
-      setCategory("");
-      setShowForm(false);
+    const newPhrase: Phrase = {
+      original,
+      translation,
+      category,
+      created: new Date().toISOString(),
+      favorite: phraseToEdit ? phraseToEdit.favorite : false,
+    };
+    if (phraseToEdit && onEditPhrase) {
+      onEditPhrase(newPhrase);
     } else {
-      alert("Vänligen fyll i alla fält och välj en kategori.");
+      onAddPhrase(newPhrase);
     }
-  };
-
-  const handleCancel = () => {
     setOriginal("");
     setTranslation("");
-    setCategory("");
-    setShowForm(false);
+    setCategory(categories[0]);
   };
 
-  if (!showForm) {
-    return (
-      <button onClick={() => setShowForm(true)}>
-        Lägg till fras
-      </button>
-    );
-  }
-
   return (
-    <div className="formContainer">
-      <div className="heading">Fras:</div>
-      <form onSubmit={handleSubmit}>
-        <div className="inputRow">
-          <input
-            type="text"
-            placeholder="Original"
-            value={original}
-            onChange={(e) => setOriginal(e.target.value)}
-            className="inputField"
-          />
-        </div>
-        <div className="inputRow">
-          <input
-            type="text"
-            placeholder="Översättning"
-            value={translation}
-            onChange={(e) => setTranslation(e.target.value)}
-            className="inputField"
-          />
-        </div>
-        <div className="inputRow">
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="inputField"
-          >
-            <option value="">Välj kategori</option>
-            {categories.map((cat, index) => (
-              <option key={index} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="buttonGroup">
-          <button type="submit">Lägg till</button>
-          <button type="button" onClick={handleCancel}>
+    <form onSubmit={handleSubmit} className="formContainer">
+      <h2>{phraseToEdit ? "Redigera Fras" : "Lägg till Fras"}</h2>
+      <div className="inputRow">
+        <input
+          type="text"
+          placeholder="Original"
+          value={original}
+          onChange={(e) => setOriginal(e.target.value)}
+          className="inputField"
+        />
+      </div>
+      <div className="inputRow">
+        <input
+          type="text"
+          placeholder="Översättning"
+          value={translation}
+          onChange={(e) => setTranslation(e.target.value)}
+          className="inputField"
+        />
+      </div>
+      <div className="inputRow">
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="inputField"
+        >
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="buttonGroup">
+        <button type="submit">{phraseToEdit ? "Uppdatera Fras" : "Lägg till Fras"}</button>
+        {phraseToEdit && onCancel && (
+          <button type="button" onClick={onCancel}>
             Avbryt
           </button>
-        </div>
-      </form>
-    </div>
+        )}
+      </div>
+    </form>
   );
 };
 

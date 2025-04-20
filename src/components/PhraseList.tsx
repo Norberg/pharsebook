@@ -1,12 +1,15 @@
 import React from "react";
 import { Phrase } from "../utils/phraseUtils";
+import { FaEdit } from "react-icons/fa";
+import "./PhraseList.css"; // Importera CSS
 
 interface PhraseListProps {
   phrases: Phrase[];
   categoryIcons: Record<string, JSX.Element>;
+  onEdit?: (phrase: Phrase) => void;
 }
 
-const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons }) => {
+const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit }) => {
   const groupedPhrases = phrases.reduce((acc, phrase) => {
     const category = phrase.category || "Uncategorized";
     if (!acc[category]) acc[category] = [];
@@ -19,12 +22,19 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons }) => {
       {Object.entries(groupedPhrases).map(([category, phrases]) => (
         <div key={category} className="category-group">
           <h3 className="category-header">
-          {category} {categoryIcons[category]} 
+            {category} {categoryIcons[category]} 
           </h3>
           <ul className="phrase-items">
             {phrases.map((phrase, index) => (
               <li key={index} className="phrase-item">
-                <strong>{phrase.original}</strong> - {phrase.translation}
+                <span>
+                  <strong>{phrase.original}</strong> - {phrase.translation}
+                </span>
+                {onEdit && (
+                  <button onClick={() => onEdit(phrase)} className="edit-button">
+                    <FaEdit />
+                  </button>
+                )}
               </li>
             ))}
           </ul>

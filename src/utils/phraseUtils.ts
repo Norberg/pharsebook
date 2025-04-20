@@ -22,7 +22,6 @@ export const initDatabase = async () => {
   const db = await openDB(DB_NAME, 1, {
     upgrade(db) {
       if (!db.objectStoreNames.contains(STORE_NAME)) {
-        // Use the composite key as the keyPath
         const store = db.createObjectStore(STORE_NAME, { keyPath: "compositeKey" });
         store.createIndex("category", "category");
         store.createIndex("favorite", "favorite");
@@ -30,13 +29,26 @@ export const initDatabase = async () => {
     },
   });
 
-  // Get all existing phrases
+  // Hämta alla existerande fraser
   const existing = await db.getAll(STORE_NAME);
-  // Create a set of existing composite keys
+  if (existing.length === 0) { // Importera endast defaultfråser om DB:n är tom
+    let newCount = 0;
+    for (const phrase of phrasesData) {
+      await db.add(STORE_NAME, withCompositeKey(phrase));
+      newCount++;
+    }
+    console.log(`Added ${newCount} default phrases, since the DB was empty.`);
+  } else {
+    console.log("DB already contains phrases, skipping default import.");
+  }
+  return db;
+};
+
+export const syncDefaultPhrases = async (): Promise<void> => {
+  const db = await initDatabase();
+  const existing = await db.getAll(STORE_NAME);
   const existingKeys = new Set(existing.map((p) => p.compositeKey));
   let newCount = 0;
-
-  // Always add phrases from the data that do not exist (by original & translation)
   for (const phrase of phrasesData) {
     const phraseWithKey = withCompositeKey(phrase);
     if (!existingKeys.has(phraseWithKey.compositeKey)) {
@@ -44,13 +56,13 @@ export const initDatabase = async () => {
       newCount++;
     }
   }
-  console.log(`Added ${newCount} new phrases. DB now contains ${existing.length + newCount} phrases total.`);
-  return db;
+  console.log(`Synced ${newCount} default phrases manually.`);
 };
 
 export const getPhrases = async (query?: string): Promise<Phrase[]> => {
   const db = await initDatabase();
   const allPhrases = await db.getAll(STORE_NAME);
+  console.log("Fetched phrases from DB:", allPhrases); // Logga hämtade fraser
 
   if (!query) return allPhrases;
 
@@ -75,5 +87,12 @@ export const updatePhrase = async (phrase: Phrase) => {
 export const deletePhrase = async (original: string, translation: string) => {
   const db = await initDatabase();
   const compositeKey = original + "::" + translation;
+  await db.delete(STORE_NAME, compositeKey);
+};
+
+export const removePhrase = async (phrase: Phrase): Promise<void> => {
+  const db = await initDatabase();
+  const compositeKey = phrase.original + "::" + phrase.translation;
+  console.log("Removing phrase with composite key:", compositeKey); // Logga den borttagna frasen
   await db.delete(STORE_NAME, compositeKey);
 };

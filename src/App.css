@@ -41,10 +41,26 @@ button:focus {
   outline-offset: 2px;
 }
 
+/* Uppdatera header så att search baren tar maxbredd */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Lägg till vertikal centrerad justering för settings-knappen */
+.settings-button {
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+/* Se till att search baren expanderar */
 .search-bar {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  flex: 1;
 }
 
 .search-bar input {

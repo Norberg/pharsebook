@@ -4,13 +4,18 @@ import "./App.css";
 import SearchBar from "./components/SearchBar";
 import PhraseList from "./components/PhraseList";
 import AddPhraseForm from "./components/AddPhraseForm";
-import { getPhrases, addPhrase, Phrase } from "./utils/phraseUtils";
+import Settings from "./components/Settings";
+import { getPhrases, addPhrase, removePhrase, syncDefaultPhrases, Phrase } from "./utils/phraseUtils";
 import { categories, getCategoryIcon } from "./components/categories";
+import { FaCog } from "react-icons/fa";
 
 const App = () => {
   const [phrases, setPhrases] = useState<Phrase[]>([]);
   const [filteredPhrases, setFilteredPhrases] = useState<Phrase[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
+  const [editingPhrase, setEditingPhrase] = useState<Phrase | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [view, setView] = useState<"main" | "settings">("main");
 
   useEffect(() => {
     const fetchPhrases = async () => {
@@ -37,15 +42,47 @@ const App = () => {
       return;
     }
     await addPhrase(newPhrase);
-    setPhrases((prevPhrases) => [...prevPhrases, newPhrase]);
+    setPhrases((prev) => [...prev, newPhrase]);
     if (hasSearched) {
-      setFilteredPhrases((prevFiltered) => [...prevFiltered, newPhrase]);
+      setFilteredPhrases((prev) => [...prev, newPhrase]);
     }
+    setShowForm(false);
+  };
+
+  const handleEditPhrase = async (updatedPhrase: Phrase) => {
+    if (!categories.includes(updatedPhrase.category)) {
+      alert("Invalid category");
+      return;
+    }
+    if (editingPhrase) {
+      await removePhrase(editingPhrase);
+    }
+    await addPhrase(updatedPhrase);
+    setPhrases((prev) =>
+      prev.map((p) =>
+        p.original === editingPhrase?.original &&
+        p.translation === editingPhrase?.translation
+          ? updatedPhrase
+          : p
+      )
+    );
+    if (hasSearched) {
+      setFilteredPhrases((prev) =>
+        prev.map((p) =>
+          p.original === editingPhrase?.original &&
+          p.translation === editingPhrase?.translation
+            ? updatedPhrase
+            : p
+        )
+      );
+    }
+    setEditingPhrase(null);
+    setShowForm(false);
   };
 
   const handleExport = () => {
-    const sortedPhrases = [...phrases].sort((a, b) =>
-      new Date(a.created).getTime() - new Date(b.created).getTime()
+    const sortedPhrases = [...phrases].sort(
+      (a, b) => new Date(a.created).getTime() - new Date(b.created).getTime()
     );
     const exportData = sortedPhrases.map(({ compositeKey, ...rest }) => rest);
     const json = JSON.stringify(exportData, null, 2);
@@ -58,21 +95,62 @@ const App = () => {
     URL.revokeObjectURL(url);
   };
 
+  const handleSyncDefaults = async () => {
+    await syncDefaultPhrases();
+    const data = await getPhrases();
+    setPhrases(data);
+    if (hasSearched) {
+      setFilteredPhrases(data);
+    }
+  };
+
+  if (view === "settings") {
+    return (
+      <Settings
+        onBack={() => setView("main")}
+        onExport={handleExport}
+        onSync={handleSyncDefaults}
+      />
+    );
+  }
+
   return (
     <div className="app-container">
-      <SearchBar onSearch={handleSearch} />
+      <div className="header">
+        <SearchBar onSearch={handleSearch} />
+        <button className="settings-button" onClick={() => setView("settings")}>
+          <FaCog />
+        </button>
+      </div>
       {hasSearched ? (
         <PhraseList
           phrases={filteredPhrases}
           categoryIcons={Object.fromEntries(
             categories.map((category) => [category, getCategoryIcon(category)])
           )}
+          onEdit={(phrase) => {
+            console.log("Editing phrase:", phrase);
+            setEditingPhrase(phrase);
+            setShowForm(true);
+          }}
         />
       ) : (
         <p>Start by searching for phrases...</p>
       )}
-      <AddPhraseForm onAddPhrase={handleAddPhrase} categories={categories} />
-      <button onClick={handleExport}>Exportera fraser</button>
+      {(editingPhrase || showForm) ? (
+        <AddPhraseForm
+          onAddPhrase={handleAddPhrase}
+          categories={categories}
+          phraseToEdit={editingPhrase || undefined}
+          onEditPhrase={handleEditPhrase}
+          onCancel={() => {
+            setEditingPhrase(null);
+            setShowForm(false);
+          }}
+        />
+      ) : (
+        <button onClick={() => setShowForm(true)}>Lägg till Fras</button>
+      )}
     </div>
   );
 };

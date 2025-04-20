@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react"; // Import React explicitly
+import { useState, useEffect, useCallback, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import SearchBar from "./components/SearchBar";

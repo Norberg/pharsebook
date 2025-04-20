@@ -8,6 +8,7 @@ interface AddPhraseFormProps {
   phraseToEdit?: Phrase;
   onEditPhrase?: (updatedPhrase: Phrase) => void;
   onCancel?: () => void;
+  onDelete?: () => void; // ny prop
 }
 
 const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
@@ -16,6 +17,7 @@ const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
   phraseToEdit,
   onEditPhrase,
   onCancel,
+  onDelete, // ny prop
 }) => {
   const [original, setOriginal] = useState("");
   const [translation, setTranslation] = useState("");
@@ -51,6 +53,12 @@ const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
     setOriginal("");
     setTranslation("");
     setCategory(categories[0]);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm("Är du säker på att du vill radera denna fras?")) {
+      onDelete && onDelete();
+    }
   };
 
   return (
@@ -89,6 +97,11 @@ const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
       </div>
       <div className="buttonGroup">
         <button type="submit">{phraseToEdit ? "Uppdatera Fras" : "Lägg till Fras"}</button>
+        {phraseToEdit && onDelete && (
+          <button type="button" onClick={handleDelete}>
+            Radera Fras
+          </button>
+        )}
         {phraseToEdit && onCancel && (
           <button type="button" onClick={onCancel}>
             Avbryt

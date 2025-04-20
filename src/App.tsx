@@ -80,6 +80,28 @@ const App = () => {
     setShowForm(false);
   };
 
+  const handleDeletePhrase = async () => {
+    if (editingPhrase) {
+      await removePhrase(editingPhrase);
+      setPhrases((prev) =>
+        prev.filter(
+          (p) =>
+            !(p.original === editingPhrase.original && p.translation === editingPhrase.translation)
+        )
+      );
+      if (hasSearched) {
+        setFilteredPhrases((prev) =>
+          prev.filter(
+            (p) =>
+              !(p.original === editingPhrase.original && p.translation === editingPhrase.translation)
+          )
+        );
+      }
+      setEditingPhrase(null);
+      setShowForm(false);
+    }
+  };
+
   const handleExport = () => {
     const sortedPhrases = [...phrases].sort(
       (a, b) => new Date(a.created).getTime() - new Date(b.created).getTime()
@@ -147,6 +169,7 @@ const App = () => {
             setEditingPhrase(null);
             setShowForm(false);
           }}
+          onDelete={handleDeletePhrase}
         />
       ) : (
         <button onClick={() => setShowForm(true)}>Lägg till Fras</button>

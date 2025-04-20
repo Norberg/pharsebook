@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback, useRef } from "react"; // Import useRef
+import React, { useState, useEffect, useCallback, useRef } from "react"; // Import React explicitly
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import SearchBar from "./components/SearchBar";
 import PhraseList from "./components/PhraseList";
 import AddPhraseForm from "./components/AddPhraseForm";
 import Settings from "./components/Settings";
-import { getPhrases, addPhrase, removePhrase, syncDefaultPhrases, Phrase } from "./utils/phraseUtils";
+import { getPhrases, addPhrase, removePhrase, syncDefaultPhrases, overwriteLocalPhrases, Phrase } from "./utils/phraseUtils"; // Import overwriteLocalPhrases
 import { categories, getCategoryIcon } from "./components/categories";
 import { FaCog } from "react-icons/fa";
 
@@ -27,16 +27,19 @@ const App = () => {
     fetchPhrases();
   }, []);
 
-  useEffect(() => {
-    // Update hasSearched based on whether the filtered list is smaller than the full list
-    setHasSearched(filteredPhrases.length < phrases.length);
-  }, [filteredPhrases, phrases]);
-
   const handleSearch = useCallback((query: string) => {
     if (editingPhrase || showForm) {
       setEditingPhrase(null);
       setShowForm(false);
     }
+    if (query === "") {
+      setFilteredPhrases(phrases);
+      setHasSearched(false);
+    }
+    if (query.length < 3){
+      return;
+    }
+    setHasSearched(true);
     const lowerQuery = query.toLowerCase();
     const filtered = phrases.filter(
       (phrase) =>
@@ -161,6 +164,10 @@ const App = () => {
     }
   };
 
+  const handleOverwritePhrases = async (): Promise<{ removedCount: number; addedCount: number }> => {
+    return await overwriteLocalPhrases();
+  };
+
   const handleEditClick = (phrase: Phrase) => {
     setEditingPhrase(phrase);
     setShowForm(true);
@@ -175,6 +182,7 @@ const App = () => {
         onBack={() => setView("main")}
         onExport={handleExport}
         onSync={handleSyncDefaults}
+        onOverwrite={handleOverwritePhrases} // Pass the updated overwrite handler
       />
     );
   }

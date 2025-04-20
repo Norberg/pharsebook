@@ -95,3 +95,22 @@ export const removePhrase = async (phrase: Phrase): Promise<void> => {
   const compositeKey = phrase.original + "::" + phrase.translation;
   await db.delete(STORE_NAME, compositeKey);
 };
+
+export const overwriteLocalPhrases = async (): Promise<{ removedCount: number; addedCount: number }> => {
+  const db = await initDatabase();
+  const existing = await db.getAll(STORE_NAME);
+  const existingKeys = new Set(existing.map((p) => p.compositeKey));
+  const jsonKeys = new Set(phrasesData.map((p) => withCompositeKey(p).compositeKey));
+
+  const removedCount = existing.filter((p) => !jsonKeys.has(p.compositeKey!)).length;
+  const addedCount = phrasesData.filter((p) => !existingKeys.has(withCompositeKey(p).compositeKey!)).length;
+
+  await db.clear(STORE_NAME); // Clear the local database
+
+  for (const phrase of phrasesData) {
+    await db.add(STORE_NAME, withCompositeKey(phrase));
+  }
+
+  console.log(`Overwrote local phrases. Removed ${removedCount} phrases and added ${addedCount} phrases.`);
+  return { removedCount, addedCount };
+};

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react"; // Import useRef
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import SearchBar from "./components/SearchBar";
@@ -16,6 +16,7 @@ const App = () => {
   const [editingPhrase, setEditingPhrase] = useState<Phrase | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [view, setView] = useState<"main" | "settings">("main");
+  const editFormRef = useRef<HTMLDivElement | null>(null); // Create a ref for the edit form
 
   useEffect(() => {
     const fetchPhrases = async () => {
@@ -160,6 +161,14 @@ const App = () => {
     }
   };
 
+  const handleEditClick = (phrase: Phrase) => {
+    setEditingPhrase(phrase);
+    setShowForm(true);
+    setTimeout(() => {
+      editFormRef.current?.scrollIntoView({ behavior: "smooth" }); // Scroll to the edit form
+    }, 0);
+  };
+
   if (view === "settings") {
     return (
       <Settings
@@ -183,24 +192,23 @@ const App = () => {
         categoryIcons={Object.fromEntries(
           categories.map((category) => [category, getCategoryIcon(category)])
         )}
-        onEdit={(phrase) => {
-          setEditingPhrase(phrase);
-          setShowForm(true);
-        }}
-        expandAll={hasSearched} // Pass expandAll based on search state
+        onEdit={handleEditClick} // Use the new handleEditClick function
+        expandAll={hasSearched}
       />
       {(editingPhrase || showForm) ? (
-        <AddPhraseForm
-          onAddPhrase={handleAddPhrase}
-          categories={categories}
-          phraseToEdit={editingPhrase || undefined}
-          onEditPhrase={handleEditPhrase}
-          onCancel={() => {
-            setEditingPhrase(null);
-            setShowForm(false);
-          }}
-          onDelete={handleDeletePhrase}
-        />
+        <div ref={editFormRef}>
+          <AddPhraseForm
+            onAddPhrase={handleAddPhrase}
+            categories={categories}
+            phraseToEdit={editingPhrase || undefined}
+            onEditPhrase={handleEditPhrase}
+            onCancel={() => {
+              setEditingPhrase(null);
+              setShowForm(false);
+            }}
+            onDelete={handleDeletePhrase}
+          />
+        </div>
       ) : (
         <button onClick={() => setShowForm(true)}>Lägg till Fras</button>
       )}

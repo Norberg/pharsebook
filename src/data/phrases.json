@@ -38,7 +38,8 @@
     "original": "Den här veckan",
     "translation": "Questa settimana",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "Det här är för salt",
@@ -65,13 +66,15 @@
     "original": "Det tar en timme",
     "translation": "Ci vuole un'ora",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "Det tar fem minuter",
     "translation": "Ci vogliono cinque minuti",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "Det var länge sen",
@@ -217,13 +220,15 @@
     "original": "Förra veckan",
     "translation": "La settimana scorsa",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "Förra året",
     "translation": "L'anno scorso",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "created": "2023-01-01T12:00:00Z",
@@ -383,7 +388,8 @@
     "original": "Hur länge tar det?",
     "translation": "Quanto tempo ci vuole?",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "created": "2023-01-01T12:05:00Z",
@@ -445,43 +451,50 @@
     "original": "I dag",
     "translation": "Oggi",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "I går",
     "translation": "Ieri",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "I morgon",
     "translation": "Domani",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "I somras",
     "translation": "Quest'estate",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "I vintras",
     "translation": "Quest'inverno",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "I år",
     "translation": "Quest'anno",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "I övermorgon",
     "translation": "Dopodomani",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "created": "2023-01-01T12:06:00Z",
@@ -788,13 +801,15 @@
     "original": "Klockan är fem över elva",
     "translation": "Sono le undici e cinque",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "Klockan är halv tre",
     "translation": "Sono le due e mezza",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "Klockan är kvart över åtta",
@@ -807,19 +822,22 @@
     "original": "Klockan är midnatt",
     "translation": "È mezzanotte",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "Klockan är prick tolv",
     "translation": "È mezzogiorno in punto",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "Klockan är tio i nio",
     "translation": "Sono le nove meno dieci",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "Länge sen sist",
@@ -839,7 +857,8 @@
     "original": "När börjar det?",
     "translation": "Quando inizia?",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "När går färjan?",
@@ -859,7 +878,8 @@
     "original": "När slutar det?",
     "translation": "Quando finisce?",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "När är det rea?",
@@ -879,37 +899,43 @@
     "original": "Nästa vecka",
     "translation": "La prossima settimana",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "Nästa år",
     "translation": "L'anno prossimo",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "På eftermiddagen",
     "translation": "Di pomeriggio",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "På kvällen",
     "translation": "Di sera",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "På morgonen",
     "translation": "Di mattina",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "På natten",
     "translation": "Di notte",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "created": "2023-01-01T12:09:00Z",
@@ -964,7 +990,8 @@
     "original": "Sent på kvällen",
     "translation": "Tardi la sera",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "created": "2023-01-01T12:07:00Z",
@@ -1005,7 +1032,8 @@
     "original": "Tidigt på morgonen",
     "translation": "La mattina presto",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "created": "2023-01-01T12:19:00Z",
@@ -1095,7 +1123,8 @@
     "original": "Vad är klockan?",
     "translation": "Che ore sono?",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "original": "Var finns kassan?",
@@ -1199,7 +1228,8 @@
     "original": "Vilken dag är det?",
     "translation": "Che giorno è?",
     "category": "Tid",
-    "favorite": false
+    "favorite": false,
+    "created": "2025-04-20T13:46:02.574Z"
   },
   {
     "created": "2023-01-01T12:27:00Z",

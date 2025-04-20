@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, JSX } from "react";
 import { Phrase } from "../utils/phraseUtils";
 import { FaEdit } from "react-icons/fa";
 import "./PhraseList.css";
+
 
 interface PhraseListProps {
   phrases: Phrase[];

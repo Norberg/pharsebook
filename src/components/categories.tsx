@@ -1,3 +1,5 @@
+import { JSX } from "react";
+
 export const categoryIcons: Record<string, JSX.Element> = {
   "Hälsningar": <span className="emoji" role="img" aria-label="Hälsningar">💬</span>,
   "Mat & dryck": <span className="emoji" role="img" aria-label="Mat & dryck">🍽️</span>,

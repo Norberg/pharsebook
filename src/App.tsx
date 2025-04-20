@@ -27,6 +27,10 @@ const App = () => {
 
   const handleSearch = useCallback((query: string) => {
     setHasSearched(true);
+    if (editingPhrase || showForm) {
+      setEditingPhrase(null);
+      setShowForm(false);
+    }
     const lowerQuery = query.toLowerCase();
     const filtered = phrases.filter(
       (phrase) =>
@@ -34,7 +38,7 @@ const App = () => {
         phrase.translation.toLowerCase().includes(lowerQuery)
     );
     setFilteredPhrases(filtered);
-  }, [phrases]);
+  }, [phrases, editingPhrase, showForm]);
 
   const handleAddPhrase = async (newPhrase: Phrase) => {
     if (!categories.includes(newPhrase.category)) {

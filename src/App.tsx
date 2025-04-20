@@ -21,12 +21,17 @@ const App = () => {
     const fetchPhrases = async () => {
       const data = await getPhrases();
       setPhrases(data);
+      setFilteredPhrases(data); // Initialize filteredPhrases with all phrases
     };
     fetchPhrases();
   }, []);
 
+  useEffect(() => {
+    // Update hasSearched based on whether the filtered list is smaller than the full list
+    setHasSearched(filteredPhrases.length < phrases.length);
+  }, [filteredPhrases, phrases]);
+
   const handleSearch = useCallback((query: string) => {
-    setHasSearched(true);
     if (editingPhrase || showForm) {
       setEditingPhrase(null);
       setShowForm(false);
@@ -148,20 +153,17 @@ const App = () => {
           <FaCog />
         </button>
       </div>
-      {hasSearched ? (
-        <PhraseList
-          phrases={filteredPhrases}
-          categoryIcons={Object.fromEntries(
-            categories.map((category) => [category, getCategoryIcon(category)])
-          )}
-          onEdit={(phrase) => {
-            setEditingPhrase(phrase);
-            setShowForm(true);
-          }}
-        />
-      ) : (
-        <p>Start by searching for phrases...</p>
-      )}
+      <PhraseList
+        phrases={filteredPhrases}
+        categoryIcons={Object.fromEntries(
+          categories.map((category) => [category, getCategoryIcon(category)])
+        )}
+        onEdit={(phrase) => {
+          setEditingPhrase(phrase);
+          setShowForm(true);
+        }}
+        expandAll={hasSearched} // Pass expandAll based on search state
+      />
       {(editingPhrase || showForm) ? (
         <AddPhraseForm
           onAddPhrase={handleAddPhrase}

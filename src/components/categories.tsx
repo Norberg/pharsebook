@@ -10,6 +10,7 @@ export const categoryIcons: Record<string, JSX.Element> = {
   "Resa": <span className="emoji" role="img" aria-label="Resa">✈️</span>,
   "Kärlek": <span className="emoji" role="img" aria-label="Kärlek">❤️</span>,
   "Presentation": <span className="emoji" role="img" aria-label="Presentation">👤</span>,
+  "Färg": <span className="emoji" role="img" aria-label="Färg">🎨</span>,
 };
 
 export const categories = Object.keys(categoryIcons);

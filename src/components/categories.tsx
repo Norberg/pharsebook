@@ -7,6 +7,7 @@ export const categoryIcons: Record<string, JSX.Element> = {
   "Shopping": <span className="emoji" role="img" aria-label="Shopping">🏷️</span>,
   "Vardag": <span className="emoji" role="img" aria-label="Vardag">🏠</span>,
   "Tid": <span className="emoji" role="img" aria-label="Tid">⏰</span>,
+  "Kalender": <span className="emoji" role="img" aria-label="Kalendar">📅</span>,
   "Resa": <span className="emoji" role="img" aria-label="Resa">✈️</span>,
   "Kärlek": <span className="emoji" role="img" aria-label="Kärlek">❤️</span>,
   "Presentation": <span className="emoji" role="img" aria-label="Presentation">👤</span>,

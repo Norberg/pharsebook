@@ -47,6 +47,15 @@ const Settings: React.FC<SettingsProps> = ({ onBack, onExport, onSync, onOverwri
           <button onClick={cancelOverwrite}>Nej</button>
         </div>
       )}
+      <footer className="build-info">
+        Phrasebook - build date: {new Date(__BUILD_DATE__).toLocaleString(undefined, {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+        })}
+      </footer>
     </div>
   );
 };

@@ -35,4 +35,7 @@ export default defineConfig({
     })
   ],
   base: '/phrasebook/',
+  define: {
+    __BUILD_DATE__: JSON.stringify(new Date().toISOString()),
+  },
 })

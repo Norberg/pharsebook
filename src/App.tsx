@@ -133,12 +133,16 @@ const App = () => {
     }
   };
 
-  const handleExport = () => {
+  const generateExportData = (): string => {
     const sortedPhrases = [...phrases].sort(
       (a, b) => new Date(a.created).getTime() - new Date(b.created).getTime()
     );
     const exportData = sortedPhrases.map(({ compositeKey, ...rest }) => rest);
-    const json = JSON.stringify(exportData, null, 2);
+    return JSON.stringify(exportData, null, 2); // Return JSON string
+  };
+
+  const handleExport = () => {
+    const json = generateExportData(); // Use the shared function
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -173,9 +177,9 @@ const App = () => {
     return (
       <Settings
         onBack={() => setView("main")}
-        onExport={handleExport}
+        onExport={async () => generateExportData()} // Pass the shared function
         onSync={handleSyncDefaults}
-        onOverwrite={handleOverwritePhrases} // Pass the updated overwrite handler
+        onOverwrite={handleOverwritePhrases}
       />
     );
   }

@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
+import axios from "axios";
 import "./Settings.css";
+
+// File server base URL as a constant
+const FILE_SERVER_URL = "http://192.168.1.224:8075/save";
 
 interface SettingsProps {
   onBack: () => void;
-  onExport: () => void;
+  onExport: () => Promise<string>;
   onSync: () => void;
-  onOverwrite: () => Promise<{ removedCount: number; addedCount: number }>; // Updated prop
+  onOverwrite: () => Promise<{ removedCount: number; addedCount: number }>;
 }
 
 const Settings: React.FC<SettingsProps> = ({ onBack, onExport, onSync, onOverwrite }) => {
@@ -17,6 +21,40 @@ const Settings: React.FC<SettingsProps> = ({ onBack, onExport, onSync, onOverwri
     const { removedCount } = await onOverwrite();
     setPhraseCount(removedCount);
     setShowConfirmation(true);
+  };
+
+  const handleUploadToFileServer = async () => {
+    try {
+      const exportedData = await onExport();
+      const file = new Blob([exportedData], { type: "application/json" });
+      const formData = new FormData();
+      formData.append("file", file, "phrases.json");
+
+      const response = await axios.post(FILE_SERVER_URL, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      alert(`File uploaded successfully: ${response.data}`);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Failed to upload file to the server.");
+    }
+  };
+
+  const handleExportClick = async () => {
+    try {
+      const exportedData = await onExport();
+      const blob = new Blob([exportedData], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "phrases.json";
+      link.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error exporting file:", error);
+      alert("Failed to export phrases.");
+    }
   };
 
   const confirmOverwrite = () => {
@@ -34,9 +72,10 @@ const Settings: React.FC<SettingsProps> = ({ onBack, onExport, onSync, onOverwri
       </button>
       <h2>Inställningar</h2>
       <div className="settings-buttons">
-        <button onClick={onExport}>Exportera fraser</button>
+        <button onClick={handleExportClick}>Exportera fraser</button>
         <button onClick={onSync}>Synka fraser</button>
         <button onClick={handleOverwriteClick}>Skriv över lokala fraser</button>
+        <button onClick={handleUploadToFileServer}>Ladda upp fraser till filserver</button>
       </div>
       {showConfirmation && (
         <div className="confirmation-dialog">

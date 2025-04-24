@@ -12,6 +12,7 @@ dist
 dist-ssr
 dev-dist
 *.local
+tools/incoming
 
 # Editor directories and files
 .vscode/*

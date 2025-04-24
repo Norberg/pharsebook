@@ -141,17 +141,6 @@ const App = () => {
     return JSON.stringify(exportData, null, 2); // Return JSON string
   };
 
-  const handleExport = () => {
-    const json = generateExportData(); // Use the shared function
-    const blob = new Blob([json], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "phrases.json";
-    link.click();
-    URL.revokeObjectURL(url);
-  };
-
   const handleSyncDefaults = async () => {
     await syncDefaultPhrases();
     const data = await getPhrases();

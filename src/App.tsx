@@ -1,136 +1,98 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import SearchBar from "./components/SearchBar";
 import PhraseList from "./components/PhraseList";
 import AddPhraseForm from "./components/AddPhraseForm";
 import Settings from "./components/Settings";
-import { getPhrases, addPhrase, removePhrase, syncDefaultPhrases, overwriteLocalPhrases, Phrase } from "./utils/phraseUtils"; // Import overwriteLocalPhrases
+import { getPhrases, addPhrase, updatePhrase, removePhrase, syncDefaultPhrases, overwriteLocalPhrases, Phrase } from "./utils/phraseUtils";
 import { categories, getCategoryIcon } from "./components/categories";
 import { FaCog } from "react-icons/fa";
 
 const App = () => {
   const [phrases, setPhrases] = useState<Phrase[]>([]);
   const [filteredPhrases, setFilteredPhrases] = useState<Phrase[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
   const [editingPhrase, setEditingPhrase] = useState<Phrase | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [view, setView] = useState<"main" | "settings">("main");
-  const editFormRef = useRef<HTMLDivElement | null>(null); // Create a ref for the edit form
+  const editFormRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const fetchPhrases = async () => {
-      const data = await getPhrases();
-      setPhrases(data);
-      setFilteredPhrases(data); // Initialize filteredPhrases with all phrases
-    };
-    fetchPhrases();
+    getPhrases().then(data => setPhrases(data));
   }, []);
 
-  const handleSearch = useCallback((query: string) => {
-    if (editingPhrase || showForm) {
-      setEditingPhrase(null);
-      setShowForm(false);
-    }
-    if (query === "") {
-      setFilteredPhrases(phrases);
+  useEffect(() => {
+    if (searchQuery.length >= 3) {
+      setHasSearched(true);
+      const q = searchQuery.toLowerCase();
+      setFilteredPhrases(
+        phrases.filter(
+          p =>
+            p.original.toLowerCase().includes(q) ||
+            p.translation.toLowerCase().includes(q)
+        )
+      );
+    } else {
       setHasSearched(false);
+      setFilteredPhrases(phrases);
     }
-    if (query.length < 3){
-      return;
-    }
-    setHasSearched(true);
-    const lowerQuery = query.toLowerCase();
-    const filtered = phrases.filter(
-      (phrase) =>
-        phrase.original.toLowerCase().includes(lowerQuery) ||
-        phrase.translation.toLowerCase().includes(lowerQuery)
-    );
-    setFilteredPhrases(filtered);
-  }, [phrases, editingPhrase, showForm]);
+  }, [phrases, searchQuery]);
 
-  const handleAddPhrase = async (newPhrase: Phrase) => {
-    if (!categories.includes(newPhrase.category)) {
+  const handleSearch = (q: string) => {
+    setSearchQuery(q);
+  };
+
+  const handleAddPhrase = async (newP: Phrase) => {
+    if (!categories.includes(newP.category)) {
       alert("Invalid category");
       return;
     }
-
-    // Check if the phrase already exists
     const exists = phrases.some(
       (p) =>
-        p.original.toLowerCase() === newPhrase.original.toLowerCase() &&
-        p.translation.toLowerCase() === newPhrase.translation.toLowerCase()
+        p.original.toLowerCase() === newP.original.toLowerCase() &&
+        p.translation.toLowerCase() === newP.translation.toLowerCase()
     );
     if (exists) {
       alert("This phrase already exists!");
       return;
     }
-
-    await addPhrase(newPhrase);
-    setPhrases((prev) => [...prev, newPhrase]);
-    if (hasSearched) {
-      setFilteredPhrases((prev) => [...prev, newPhrase]);
-    }
+    await addPhrase(newP);
+    setPhrases(prev => [...prev, newP]);
     setShowForm(false);
   };
 
-  const handleEditPhrase = async (updatedPhrase: Phrase) => {
-    if (!categories.includes(updatedPhrase.category)) {
+  const handleEditPhrase = async (updated: Phrase) => {
+    if (!categories.includes(updated.category)) {
       alert("Invalid category");
       return;
     }
-
-    // Check if the updated phrase already exists (excluding the one being edited)
     const exists = phrases.some(
       (p) =>
-        p.original.toLowerCase() === updatedPhrase.original.toLowerCase() &&
-        p.translation.toLowerCase() === updatedPhrase.translation.toLowerCase() &&
+        p.original.toLowerCase() === updated.original.toLowerCase() &&
+        p.translation.toLowerCase() === updated.translation.toLowerCase() &&
         p.compositeKey !== editingPhrase?.compositeKey
     );
     if (exists) {
       alert("This phrase already exists!");
       return;
     }
-
-    if (editingPhrase) {
-      await removePhrase(editingPhrase);
-    }
-    await addPhrase(updatedPhrase);
-
-    // Update phrases and filteredPhrases to reflect the category change
-    setPhrases((prev) =>
-      prev.map((p) =>
-        p.compositeKey === editingPhrase?.compositeKey ? updatedPhrase : p
-      )
+    await updatePhrase(updated);
+    setPhrases(prev =>
+      prev.map(p => (p.compositeKey === updated.compositeKey ? updated : p))
     );
-    setFilteredPhrases((prev) =>
-      prev.map((p) =>
-        p.compositeKey === editingPhrase?.compositeKey ? updatedPhrase : p
-      )
-    );
-  
     setEditingPhrase(null);
     setShowForm(false);
   };
 
-  const handleDeletePhrase = async () => {
-    if (editingPhrase) {
-      await removePhrase(editingPhrase);
-      setPhrases((prev) =>
-        prev.filter(
-          (p) =>
-            !(p.original === editingPhrase.original && p.translation === editingPhrase.translation)
-        )
-      );
-      setFilteredPhrases((prev) =>
-        prev.filter(
-          (p) =>
-            !(p.original === editingPhrase.original && p.translation === editingPhrase.translation)
-        )
-      );
-      setEditingPhrase(null);
-      setShowForm(false);
-    }
+  const handleDeletePhrase = async (toDelete: Phrase) => {
+    await removePhrase(toDelete);
+    setPhrases(prev =>
+      prev.filter(p => p.compositeKey !== toDelete.compositeKey)
+    );
+    setEditingPhrase(null);
+    setShowForm(false);
   };
 
   const generateExportData = (): string => {
@@ -138,27 +100,27 @@ const App = () => {
       (a, b) => new Date(a.created).getTime() - new Date(b.created).getTime()
     );
     const exportData = sortedPhrases.map(({ compositeKey, ...rest }) => rest);
-    return JSON.stringify(exportData, null, 2); // Return JSON string
+    return JSON.stringify(exportData, null, 2);
   };
 
   const handleSyncDefaults = async () => {
     await syncDefaultPhrases();
     const data = await getPhrases();
     setPhrases(data);
-    if (hasSearched) {
-      setFilteredPhrases(data);
-    }
   };
 
   const handleOverwritePhrases = async (): Promise<{ removedCount: number; addedCount: number }> => {
-    return await overwriteLocalPhrases();
+    const result = await overwriteLocalPhrases();
+    const data = await getPhrases();
+    setPhrases(data);
+    return result;
   };
 
   const handleEditClick = (phrase: Phrase) => {
     setEditingPhrase(phrase);
     setShowForm(true);
     setTimeout(() => {
-      editFormRef.current?.scrollIntoView({ behavior: "smooth" }); // Scroll to the edit form
+      editFormRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 0);
   };
 
@@ -166,7 +128,7 @@ const App = () => {
     return (
       <Settings
         onBack={() => setView("main")}
-        onExport={async () => generateExportData()} // Pass the shared function
+        onExport={async () => generateExportData()}
         onSync={handleSyncDefaults}
         onOverwrite={handleOverwritePhrases}
       />
@@ -186,7 +148,7 @@ const App = () => {
         categoryIcons={Object.fromEntries(
           categories.map((category) => [category, getCategoryIcon(category)])
         )}
-        onEdit={handleEditClick} // Use the new handleEditClick function
+        onEdit={handleEditClick}
         expandAll={hasSearched}
       />
       {(editingPhrase || showForm) ? (
@@ -200,7 +162,7 @@ const App = () => {
               setEditingPhrase(null);
               setShowForm(false);
             }}
-            onDelete={handleDeletePhrase}
+            onDelete={() => handleDeletePhrase(editingPhrase!)}
           />
         </div>
       ) : (

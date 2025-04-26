@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import axios from "axios";
 import "./Settings.css";
 import { syncFromSupabase, syncToSupabase } from "../utils/phraseUtils";
 import { supabase } from "../utils/supabaseClient"; // Importera klient (se nästa fil)
-
-const FILE_SERVER_URL = "http://192.168.1.224:8075/save";
 
 interface SettingsProps {
   onBack: () => void;
@@ -46,24 +43,6 @@ const Settings: React.FC<SettingsProps> = ({
     const { removedCount } = await onOverwrite();
     setPhraseCount(removedCount);
     setShowConfirmation(true);
-  };
-
-  const handleUploadToFileServer = async () => {
-    try {
-      const exportedData = await onExport();
-      const file = new Blob([exportedData], { type: "application/json" });
-      const formData = new FormData();
-      formData.append("file", file, "phrases.json");
-
-      const response = await axios.post(FILE_SERVER_URL, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      alert(`File uploaded successfully: ${response.data}`);
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      alert("Failed to upload file to the server.");
-    }
   };
 
   const handleExportClick = async () => {
@@ -158,9 +137,8 @@ const Settings: React.FC<SettingsProps> = ({
       )}
       <div className="settings-buttons">
         <button onClick={handleExportClick}>Exportera fraser</button>
-        <button onClick={onSync}>Synka fraser</button>
-        <button onClick={handleOverwriteClick}>Skriv över lokala fraser</button>
-        <button onClick={handleUploadToFileServer}>Ladda upp fraser till filserver</button>
+        <button onClick={onSync}>Uppdatera nya fraser från grundutbudet</button>
+        <button onClick={handleOverwriteClick}>Ersätt alla lokala fraser med grundutbudet</button>
         {user && (
           <>
             <button onClick={handleSyncFromSupabase}>Synka från Supabase</button>

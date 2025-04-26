@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import {JSX, useState, useEffect } from "react";
 import categoriesJson from "../data/categories.json";
 import { getCategories, Category } from "../utils/phraseUtils";
 

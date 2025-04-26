@@ -2,10 +2,7 @@ import { openDB, IDBPDatabase } from "idb";
 import phrasesData from "../data/phrases.json";
 import categoriesData from "../data/categories.json";
 import { supabase } from "./supabaseClient"; // Use shared client
-import {
-  syncCategoriesFromSupabase,
-  syncCategoriesToSupabase,
-} from "./phraseUtils"; // se till att de finns deklarerade tidigare
+
 
 // Phrase object interface
 export interface Phrase {
@@ -45,7 +42,7 @@ const ensureCompositeKey = (phrase: Omit<Phrase, 'compositeKey'> | Phrase): Phra
 export const initDatabase = async (): Promise<IDBPDatabase> => {
   console.log("Initializing IndexedDB...");
   const db = await openDB(DB_NAME, 2, {
-    async onBlocked() {
+    async blocked() {
       console.warn("Database is blocked. Please close all other tabs using this database.");
     },
     upgrade(db) {

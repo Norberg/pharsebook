@@ -37,16 +37,6 @@ const CategoryManager: React.FC<Props> = ({ onClose }) => {
     await reload();
   };
 
-  const handleRename = async (idx: number, name: string) => {
-    const cat = cats[idx];
-    if (phrases.some(p => p.category === cat.name)) {
-      alert("Kategorin används");
-      return;
-    }
-    await updateCategory({ ...cat, name });
-    await reload();
-  };
-
   const handleDelete = async (idx: number) => {
     const cat = cats[idx];
     if (phrases.some(p => p.category === cat.name)) {

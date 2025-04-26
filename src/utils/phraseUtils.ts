@@ -155,10 +155,10 @@ export const syncFromSupabase = async (): Promise<{ success: boolean; count: num
  */
 export const syncToSupabase = async (): Promise<{ success: boolean; upsertedCount: number; error?: string }> => {
   console.log("Attempting to sync TO Supabase...");
-   if (!navigator.onLine) {
-      const message = "Cannot sync to Supabase: No internet connection.";
-      console.error(message);
-      return { success: false, upsertedCount: 0, error: message };
+  if (!navigator.onLine) {
+    const message = "Cannot sync to Supabase: No internet connection.";
+    console.error(message);
+    return { success: false, upsertedCount: 0, error: message };
   }
 
   try {
@@ -166,26 +166,40 @@ export const syncToSupabase = async (): Promise<{ success: boolean; upsertedCoun
     const localPhrases = await db.getAll(STORE_NAME);
     console.log(`Found ${localPhrases.length} local phrases to potentially sync.`);
 
+    // Remove phrases from supabase that are not in local
+    const localKeys = new Set(localPhrases.map(p => `${p.original}::${p.translation}`));
+    const { data: remoteRows, error: fetchErr } = await supabase
+      .from(SUPA_PHRASE_TABLE)
+      .select("original,translation");
+    if (fetchErr) throw fetchErr;
+    const toDelete = (remoteRows || [])
+      .filter(r => !localKeys.has(`${r.original}::${r.translation}`));
+    for (const row of toDelete) {
+      await supabase
+        .from(SUPA_PHRASE_TABLE)
+        .delete()
+        .match({ original: row.original, translation: row.translation });
+    }
+    console.log(`Deleted ${toDelete.length} remote phrases not present locally.`);
+
     if (localPhrases.length === 0) {
-        console.log("No local phrases to sync.");
-        return { success: true, upsertedCount: 0 };
+      console.log("No local phrases to sync.");
+      return { success: true, upsertedCount: 0 };
     }
 
     // Map local data to Supabase format (remove compositeKey)
     const supabasePhrases = localPhrases.map(p => ({
-        created: p.created,
-        original: p.original,
-        translation: p.translation,
-        category: p.category,
-        favorite: p.favorite,
+      created: p.created,
+      original: p.original,
+      translation: p.translation,
+      category: p.category,
+      favorite: p.favorite,
     }));
 
-    // Use upsert to insert/update based on primary key (original, translation)
+    // Use upsert to insert/update based on primary key
     const { data, error, count } = await supabase
       .from(SUPA_PHRASE_TABLE)
-      .upsert(supabasePhrases, {
-         // Supabase uses the primary key for upsert automatically if defined in DB
-      })
+      .upsert(supabasePhrases)
       .select();
 
     if (error) {
@@ -211,7 +225,7 @@ export const syncToSupabase = async (): Promise<{ success: boolean; upsertedCoun
 
   } catch (err: any) {
     console.error("Unexpected error during sync to Supabase:", err);
-     return { success: false, upsertedCount: 0, error: err.message || "Unknown error" };
+    return { success: false, upsertedCount: 0, error: err.message || "Unknown error" };
   }
 };
 

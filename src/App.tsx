@@ -5,7 +5,7 @@ import SearchBar from "./components/SearchBar";
 import PhraseList from "./components/PhraseList";
 import AddPhraseForm from "./components/AddPhraseForm";
 import Settings from "./components/Settings";
-import { getPhrases, addPhrase, updatePhrase, removePhrase, syncDefaultPhrases, overwriteLocalPhrases, Phrase } from "./utils/phraseUtils";
+import { getPhrases, addPhrase, updatePhrase, removePhrase, syncDefaultPhrases, overwriteLocalPhrases, Phrase, ensureCompositeKey } from "./utils/phraseUtils";
 import { useCategories, getCategoryIcon } from "./components/categories";
 import { FaCog } from "react-icons/fa";
 
@@ -71,9 +71,16 @@ const App = () => {
       alert("This phrase already exists!");
       return;
     }
-    await updatePhrase(updated);
-    setPhrases(prev =>
-      prev.map(p => (p.compositeKey === updated.compositeKey ? updated : p))
+
+    const oldKey = editingPhrase!.compositeKey!;
+    const updatedWithKey = ensureCompositeKey(updated);
+
+    await updatePhrase(updatedWithKey, oldKey);
+
+    setPhrases((prev) =>
+      prev.map((p) =>
+        p.compositeKey === oldKey ? updatedWithKey : p
+      )
     );
     setEditingPhrase(null);
     setShowForm(false);

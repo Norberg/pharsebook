@@ -30,7 +30,7 @@ const SUPA_CAT_TABLE = "categories";
 // --- IndexedDB Functions ---
 
 // Helper to generate the composite key
-const ensureCompositeKey = (phrase: Omit<Phrase, 'compositeKey'> | Phrase): Phrase => {
+export const ensureCompositeKey = (phrase: Omit<Phrase, 'compositeKey'> | Phrase): Phrase => {
   const key = `${phrase.original}::${phrase.translation}`;
   if ('compositeKey' in phrase && phrase.compositeKey && phrase.compositeKey !== key) {
       console.warn("Composite key mismatch for:", phrase);
@@ -331,16 +331,23 @@ export const addPhrase = async (phrase: Omit<Phrase, 'compositeKey'>): Promise<v
 
 /**
  * Updates a phrase in IndexedDB.
+ * Removes the old phrase if the compositeKey has changed.
  */
-export const updatePhrase = async (phrase: Phrase): Promise<void> => {
+export const updatePhrase = async (
+  phrase: Phrase,
+  oldCompositeKey?: string
+): Promise<void> => {
   const db = await initDatabase();
   const phraseWithKey = ensureCompositeKey(phrase);
   try {
-      await db.put(STORE_NAME, phraseWithKey);
-      console.log("Phrase updated/put locally.");
-  } catch(error) {
-       console.error("Error updating/putting phrase locally:", error);
-       throw error;
+    if (oldCompositeKey && oldCompositeKey !== phraseWithKey.compositeKey) {
+      await db.delete(STORE_NAME, oldCompositeKey);
+    }
+    await db.put(STORE_NAME, phraseWithKey);
+    console.log("Phrase updated/put locally.");
+  } catch (error: any) {
+    console.error("Error updating/putting phrase locally:", error);
+    throw error;
   }
 };
 

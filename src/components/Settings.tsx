@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import axios from "axios";
 import "./Settings.css";
+import { syncFromSupabase, syncToSupabase } from "../utils/phraseUtils";
 
 // File server base URL as a constant
 const FILE_SERVER_URL = "http://192.168.1.224:8075/save";
@@ -13,7 +14,12 @@ interface SettingsProps {
   onOverwrite: () => Promise<{ removedCount: number; addedCount: number }>;
 }
 
-const Settings: React.FC<SettingsProps> = ({ onBack, onExport, onSync, onOverwrite }) => {
+const Settings: React.FC<SettingsProps> = ({
+  onBack,
+  onExport,
+  onSync,
+  onOverwrite,
+}) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [phraseCount, setPhraseCount] = useState(0);
 
@@ -65,6 +71,24 @@ const Settings: React.FC<SettingsProps> = ({ onBack, onExport, onSync, onOverwri
     setShowConfirmation(false);
   };
 
+  const handleSyncFromSupabase = async () => {
+    const result = await syncFromSupabase();
+    if (result.success) {
+      alert(`Synkade ${result.count} fraser från Supabase!`);
+    } else {
+      alert(`Fel vid synk från Supabase: ${result.error}`);
+    }
+  };
+
+  const handleSyncToSupabase = async () => {
+    const result = await syncToSupabase();
+    if (result.success) {
+      alert(`Synkade ${result.upsertedCount} fraser till Supabase!`);
+    } else {
+      alert(`Fel vid synk till Supabase: ${result.error}`);
+    }
+  };
+
   return (
     <div className="settings-page">
       <button onClick={onBack} className="back-button">
@@ -76,6 +100,8 @@ const Settings: React.FC<SettingsProps> = ({ onBack, onExport, onSync, onOverwri
         <button onClick={onSync}>Synka fraser</button>
         <button onClick={handleOverwriteClick}>Skriv över lokala fraser</button>
         <button onClick={handleUploadToFileServer}>Ladda upp fraser till filserver</button>
+        <button onClick={handleSyncFromSupabase}>Synka från Supabase</button>
+        <button onClick={handleSyncToSupabase}>Synka till Supabase</button>
       </div>
       {showConfirmation && (
         <div className="confirmation-dialog">

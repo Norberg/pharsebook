@@ -271,7 +271,11 @@ export const syncCategoriesFromSupabase = async (): Promise<void> => {
 export const syncCategoriesToSupabase = async (): Promise<void> => {
   if (!navigator.onLine) throw new Error("Offline");
   const cats = await getCategories();
-  const { error } = await supabase.from(SUPA_CAT_TABLE).upsert(cats);
+  const user = await supabase.auth.getUser();
+  const userId = user?.data?.user?.id;
+  if (!userId) throw new Error("Not authenticated");
+  const catsWithUserId = cats.map(cat => ({ ...cat, user_id: userId }));
+  const { error } = await supabase.from(SUPA_CAT_TABLE).upsert(catsWithUserId);
   if (error) throw error;
 };
 

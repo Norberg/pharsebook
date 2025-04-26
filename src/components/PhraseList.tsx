@@ -3,6 +3,7 @@ import { Phrase } from "../utils/phraseUtils";
 import { FaEdit } from "react-icons/fa";
 import { useCategories } from "./categories";
 import "./PhraseList.css";
+import ItalianNumbers from "./Numbers";
 
 interface PhraseListProps {
   phrases: Phrase[];
@@ -64,20 +65,23 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
             {category} {categoryIcons[category]} ({groupedPhrases[category].length})
           </h3>
           {expandedCategories.has(category) && (
-            <ul className="phrase-items">
-              {groupedPhrases[category].map((phrase, idx) => (
-                <li key={idx} className="phrase-item">
-                  <span>
-                    <strong>{phrase.original}</strong> - {phrase.translation}
-                  </span>
-                  {onEdit && (
-                    <button onClick={() => onEdit(phrase)} className="edit-button">
-                      <FaEdit />
-                    </button>
-                  )}
-                </li>
-              ))}
-            </ul>
+            <>
+              {category === "Nummer" && <ItalianNumbers />}
+              <ul className="phrase-items">
+                {groupedPhrases[category].map((phrase, idx) => (
+                  <li key={idx} className="phrase-item">
+                    <span>
+                      <strong>{phrase.original}</strong> - {phrase.translation}
+                    </span>
+                    {onEdit && (
+                      <button onClick={() => onEdit(phrase)} className="edit-button">
+                        <FaEdit />
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </>
           )}
         </div>
       ))}

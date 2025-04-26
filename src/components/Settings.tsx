@@ -92,7 +92,15 @@ const Settings: React.FC<SettingsProps> = ({
     e.preventDefault();
     setLoading(true);
     setAuthMsg("");
-    const { error } = await supabase.auth.signInWithOtp({ email });
+    const emailRedirectTo =
+      window.location.origin +
+      (window.location.pathname.endsWith("/")
+        ? window.location.pathname
+        : window.location.pathname + "/");
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo },
+    });
     if (error) {
       setAuthMsg(error.message);
     } else {

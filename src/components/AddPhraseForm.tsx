@@ -1,27 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { Phrase } from "../utils/phraseUtils";
+import { Phrase, Category } from "../utils/phraseUtils";
+import { useCategories } from "./categories";
 import "./AddPhraseForm.css";
 
 interface AddPhraseFormProps {
   onAddPhrase: (phrase: Phrase) => void;
-  categories: string[];
   phraseToEdit?: Phrase;
   onEditPhrase?: (updatedPhrase: Phrase) => void;
   onCancel?: () => void;
-  onDelete?: () => void; // ny prop
+  onDelete?: () => void;
 }
 
 const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
   onAddPhrase,
-  categories,
   phraseToEdit,
   onEditPhrase,
   onCancel,
-  onDelete, // ny prop
+  onDelete,
 }) => {
   const [original, setOriginal] = useState("");
   const [translation, setTranslation] = useState("");
-  const [category, setCategory] = useState(categories[0]);
+  const dynamicCats = useCategories();
+  const [category, setCategory] = useState<string>(
+    phraseToEdit?.category ?? dynamicCats[0]?.name ?? ""
+  );
 
   useEffect(() => {
     if (phraseToEdit) {
@@ -31,9 +33,9 @@ const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
     } else {
       setOriginal("");
       setTranslation("");
-      setCategory(categories[0]);
+      setCategory(dynamicCats[0]?.name ?? "");
     }
-  }, [phraseToEdit, categories]);
+  }, [phraseToEdit, dynamicCats]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,7 +53,7 @@ const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
     }
     setOriginal("");
     setTranslation("");
-    setCategory(categories[0]);
+    setCategory(dynamicCats[0]?.name ?? "");
   };
 
   const handleDelete = () => {
@@ -87,9 +89,9 @@ const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
           onChange={(e) => setCategory(e.target.value)}
           className="inputField"
         >
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
+          {dynamicCats.map((cat: Category) => (
+            <option key={cat.name} value={cat.name}>
+              {cat.name}
             </option>
           ))}
         </select>

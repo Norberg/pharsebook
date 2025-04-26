@@ -1,0 +1,50 @@
+.catmgr-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 999;
+}
+
+.catmgr-modal {
+  position: fixed;
+  top: 5vh; bottom: 5vh;
+  left: 50%; transform: translateX(-50%);
+  width: calc(100vw - 2rem);
+  max-width: 400px;
+  max-height: 90vh;
+  background: #fff;
+  padding: 1rem;
+  border: 2px solid #444;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.catmgr-modal ul li {
+  display: flex;
+  align-items: center;
+}
+
+.catmgr-name {
+  margin-right: auto;  /* push everything else to the right */
+}
+
+.actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ensure emoji input stays next to buttons */
+.catmgr-icon-input {
+  width: 3em;
+  margin-right: 0.5rem;
+}
+
+.catmgr-delete-button {
+  background: #f44336;
+}
+
+.catmgr-delete-button:hover {
+    background: #d32f2f;
+  }

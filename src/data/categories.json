@@ -1,0 +1,13 @@
+[
+  { "name": "Hälsningar",   "icon": "💬", "position": 1 },
+  { "name": "Mat & dryck",  "icon": "🍽️", "position": 2 },
+  { "name": "Artighet",     "icon": "🤝", "position": 3 },
+  { "name": "Shopping",     "icon": "🏷️", "position": 4 },
+  { "name": "Vardag",       "icon": "🏠", "position": 5 },
+  { "name": "Tid",          "icon": "⏰", "position": 6 },
+  { "name": "Kalender",     "icon": "📅", "position": 7 },
+  { "name": "Resa",         "icon": "✈️", "position": 8 },
+  { "name": "Kärlek",       "icon": "❤️", "position": 9 },
+  { "name": "Presentation", "icon": "👤", "position": 10 },
+  { "name": "Färg",         "icon": "🎨", "position": 11 }
+]

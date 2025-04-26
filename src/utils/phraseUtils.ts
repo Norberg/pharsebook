@@ -2,6 +2,10 @@ import { openDB, IDBPDatabase } from "idb";
 import phrasesData from "../data/phrases.json";
 import categoriesData from "../data/categories.json";
 import { supabase } from "./supabaseClient"; // Use shared client
+import {
+  syncCategoriesFromSupabase,
+  syncCategoriesToSupabase,
+} from "./phraseUtils"; // se till att de finns deklarerade tidigare
 
 // Phrase object interface
 export interface Phrase {
@@ -129,6 +133,15 @@ export const syncFromSupabase = async (): Promise<{ success: boolean; count: num
       }
       await tx.done;
       console.log(`Successfully updated local DB with ${addedCount} phrases from Supabase.`);
+
+      // sync categories too
+      try {
+        await syncCategoriesFromSupabase();
+        console.log("Categories synced from Supabase.");
+      } catch (err) {
+        console.error("Failed to sync categories:", err);
+      }
+
       return { success: true, count: addedCount };
     } else {
         return { success: true, count: 0 };
@@ -187,6 +200,14 @@ export const syncToSupabase = async (): Promise<{ success: boolean; upsertedCoun
     console.log(`Successfully upserted ${upsertedCount} phrases to Supabase.`);
     if (upsertedCount === 0 && localPhrases.length > 0){
         console.log("Note: Upsert completed, but no rows were reported as changed/added. Data might have been identical.");
+    }
+
+    // sync categories too
+    try {
+      await syncCategoriesToSupabase();
+      console.log("Categories synced to Supabase.");
+    } catch (err) {
+      console.error("Failed to sync categories:", err);
     }
 
     return { success: true, upsertedCount: upsertedCount };

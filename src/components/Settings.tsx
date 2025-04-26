@@ -155,7 +155,14 @@ const Settings: React.FC<SettingsProps> = ({
             <button onClick={handleSyncToSupabase}>Synka till Supabase</button>
           </>
         )}
-        <button onClick={() => setShowCatMgr(true)}>Hantera kategorier</button>
+        <button
+          onClick={() => {
+            console.log("Hantera kategorier clicked");
+            setShowCatMgr(true);
+          }}
+        >
+          Hantera kategorier
+        </button>
       </div>
       {showCatMgr && (
         <CategoryManager

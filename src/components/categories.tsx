@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import categoriesJson from "../data/categories.json";
 import { getCategories, Category } from "../utils/phraseUtils";
 
-// Synkron lista av kategori-namn (samma som tidigare hårdkodat)
-export const categories: string[] = (categoriesJson as Category[]).map(c => c.name);
-
 // Hook för att läsa in kategorier från IndexedDB
 export const useCategories = (): Category[] => {
   const [cats, setCats] = useState<Category[]>([]);

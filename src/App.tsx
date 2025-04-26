@@ -6,7 +6,7 @@ import PhraseList from "./components/PhraseList";
 import AddPhraseForm from "./components/AddPhraseForm";
 import Settings from "./components/Settings";
 import { getPhrases, addPhrase, updatePhrase, removePhrase, syncDefaultPhrases, overwriteLocalPhrases, Phrase } from "./utils/phraseUtils";
-import { categories, getCategoryIcon } from "./components/categories";
+import { useCategories, getCategoryIcon } from "./components/categories";
 import { FaCog } from "react-icons/fa";
 
 const App = () => {
@@ -18,6 +18,7 @@ const App = () => {
   const [showForm, setShowForm] = useState(false);
   const [view, setView] = useState<"main" | "settings">("main");
   const editFormRef = useRef<HTMLDivElement | null>(null);
+  const dynamicCats = useCategories();
 
   useEffect(() => {
     getPhrases().then(data => setPhrases(data));
@@ -45,10 +46,6 @@ const App = () => {
   };
 
   const handleAddPhrase = async (newP: Phrase) => {
-    if (!categories.includes(newP.category)) {
-      alert("Invalid category");
-      return;
-    }
     const exists = phrases.some(
       (p) =>
         p.original.toLowerCase() === newP.original.toLowerCase() &&
@@ -64,10 +61,6 @@ const App = () => {
   };
 
   const handleEditPhrase = async (updated: Phrase) => {
-    if (!categories.includes(updated.category)) {
-      alert("Invalid category");
-      return;
-    }
     const exists = phrases.some(
       (p) =>
         p.original.toLowerCase() === updated.original.toLowerCase() &&
@@ -146,7 +139,7 @@ const App = () => {
       <PhraseList
         phrases={filteredPhrases}
         categoryIcons={Object.fromEntries(
-          categories.map((category) => [category, getCategoryIcon(category)])
+          dynamicCats.map(c => [c.name, getCategoryIcon(c.name, dynamicCats)])
         )}
         onEdit={handleEditClick}
         expandAll={hasSearched}
@@ -155,7 +148,6 @@ const App = () => {
         <div ref={editFormRef}>
           <AddPhraseForm
             onAddPhrase={handleAddPhrase}
-            categories={categories}
             phraseToEdit={editingPhrase || undefined}
             onEditPhrase={handleEditPhrase}
             onCancel={() => {

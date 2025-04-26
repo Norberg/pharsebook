@@ -73,18 +73,15 @@ button:focus {
 }
 
 .category-group {
-  margin-bottom: 30px;
-  padding: 15px;
-  border: 2px solid #ddd; /* Updated border */
+  padding-left: 2px;
+  border: 2px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
+  margin-bottom: 4px;
 }
 
 .category-header {
-  display: flex;
-  align-items: center;
   font-size: 1.2em;
-  margin-bottom: 10px;
   color: #333;
 }
 
@@ -99,10 +96,8 @@ button:focus {
 }
 
 .phrase-item {
-  padding: 8px 0;
-  border: 1px solid #eee; /* Added border */
+  border: 1px solid #eee;
   border-radius: 4px;
-  margin-bottom: 8px;
   background-color: #ffffff;
 }
 

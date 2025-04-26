@@ -1,8 +1,8 @@
 import React, { useState, useEffect, JSX } from "react";
 import { Phrase } from "../utils/phraseUtils";
 import { FaEdit } from "react-icons/fa";
+import { useCategories } from "./categories";
 import "./PhraseList.css";
-
 
 interface PhraseListProps {
   phrases: Phrase[];
@@ -14,6 +14,7 @@ interface PhraseListProps {
 
 const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit, searchQuery, expandAll = false }) => {
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  const dynamicCats = useCategories();
 
   const groupedPhrases = React.useMemo(() => {
     return phrases.reduce((acc, phrase) => {
@@ -47,17 +48,25 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
     });
   };
 
+  const ordered = dynamicCats
+    .map((c) => c.name)
+    .filter((name) => groupedPhrases[name]);
+  const extra = Object.keys(groupedPhrases).filter(
+    (name) => !dynamicCats.some((c) => c.name === name)
+  );
+  const renderCategories = [...ordered, ...extra];
+
   return (
     <div className="phrase-list">
-      {Object.entries(groupedPhrases).map(([category, phrases]) => (
+      {renderCategories.map((category) => (
         <div key={category} className="category-group">
           <h3 className="category-header" onClick={() => handleCategoryClick(category)}>
-            {category} {categoryIcons[category]} ({phrases.length})
+            {category} {categoryIcons[category]} ({groupedPhrases[category].length})
           </h3>
           {expandedCategories.has(category) && (
             <ul className="phrase-items">
-              {phrases.map((phrase, index) => (
-                <li key={index} className="phrase-item">
+              {groupedPhrases[category].map((phrase, idx) => (
+                <li key={idx} className="phrase-item">
                   <span>
                     <strong>{phrase.original}</strong> - {phrase.translation}
                   </span>

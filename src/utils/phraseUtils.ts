@@ -1,11 +1,10 @@
 import { openDB, IDBPDatabase } from "idb";
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import phrasesData from "../data/phrases.json";
+import { supabase } from "./supabaseClient"; // Use shared client
 
-// Interface för frasobjektet
+// Phrase object interface
 export interface Phrase {
-  // id behövs inte längre eftersom vi använder composite key
-  created: string; // ISO 8601 format för kompatibilitet
+  created: string; // ISO 8601 format for compatibility
   original: string;
   translation: string;
   category: string;
@@ -15,34 +14,24 @@ export interface Phrase {
 
 const DB_NAME = "PhrasebookDB";
 const STORE_NAME = "phrases";
-const SUPABASE_URL = "https://pymzmxwikuxsxwlwgmpe.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5bXpteHdpa3V4c3h3bHdnbXBlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU2MDEyNDQsImV4cCI6MjA2MTE3NzI0NH0.DqaKxHMDbsoi9XJ_sxyoKlJnGglEG00DIKhxLCUkFGU";
-
-// Skapa Supabase-klient
-const supabase: SupabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Supabase tabellnamn
 const SUPABASE_TABLE = 'phrases';
 
-// --- IndexedDB Funktioner ---
+// --- IndexedDB Functions ---
 
-// Helper function to generate the composite key
+// Helper to generate the composite key
 const ensureCompositeKey = (phrase: Omit<Phrase, 'compositeKey'> | Phrase): Phrase => {
   const key = `${phrase.original}::${phrase.translation}`;
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if ('compositeKey' in phrase && phrase.compositeKey && phrase.compositeKey !== key) {
       console.warn("Composite key mismatch for:", phrase);
   }
   return { ...phrase, compositeKey: key };
 };
 
-
-// Initiera IndexedDB
+// Initialize IndexedDB and populate with JSON data if empty
 export const initDatabase = async (): Promise<IDBPDatabase> => {
-  const db = await openDB(DB_NAME, 1, { // Version 1 är tillräcklig nu
+  const db = await openDB(DB_NAME, 1, {
     upgrade(db) {
       if (!db.objectStoreNames.contains(STORE_NAME)) {
-        // Använd compositeKey som keyPath, matchar Supabase primärnyckel
         const store = db.createObjectStore(STORE_NAME, { keyPath: "compositeKey" });
         store.createIndex("category", "category");
         store.createIndex("favorite", "favorite");
@@ -51,7 +40,6 @@ export const initDatabase = async (): Promise<IDBPDatabase> => {
     },
   });
 
-  // Importera initial JSON-data om IndexedDB är tom
   const tx = db.transaction(STORE_NAME, 'readonly');
   const count = await tx.store.count();
   await tx.done;
@@ -61,8 +49,6 @@ export const initDatabase = async (): Promise<IDBPDatabase> => {
     const addTx = db.transaction(STORE_NAME, 'readwrite');
     let newCount = 0;
     for (const phrase of phrasesData) {
-      // Säkerställ att compositeKey finns för lokala data
-       // Explicit type assertion if necessary
       const phraseWithKey = ensureCompositeKey(phrase as Omit<Phrase, 'compositeKey'>);
       await addTx.store.add(phraseWithKey);
       newCount++;
@@ -76,11 +62,11 @@ export const initDatabase = async (): Promise<IDBPDatabase> => {
   return db;
 };
 
-// --- Manuella Synkroniseringsfunktioner ---
+// --- Manual Sync Functions ---
 
 /**
- * Hämtar alla fraser från Supabase och skriver över den lokala IndexedDB.
- * Anropas från knappen "Synka från Supabase".
+ * Fetches all phrases from Supabase and overwrites local IndexedDB.
+ * Called from the "Sync from Supabase" button.
  */
 export const syncFromSupabase = async (): Promise<{ success: boolean; count: number; error?: string }> => {
   console.log("Attempting to sync FROM Supabase...");
@@ -104,25 +90,24 @@ export const syncFromSupabase = async (): Promise<{ success: boolean; count: num
       console.log(`Fetched ${data.length} phrases from Supabase.`);
       const db = await initDatabase();
       const tx = db.transaction(STORE_NAME, 'readwrite');
-      await tx.store.clear(); // Rensa lokal databas först
+      await tx.store.clear();
       let addedCount = 0;
       for (const supabasePhrase of data) {
-         // Mappa Supabase-data till lokalt format och säkerställ compositeKey
          const localPhrase = ensureCompositeKey({
-            created: supabasePhrase.created, // Antag att kolumnen heter 'created'
+            created: supabasePhrase.created,
             original: supabasePhrase.original,
             translation: supabasePhrase.translation,
             category: supabasePhrase.category,
             favorite: supabasePhrase.favorite,
          });
-        await tx.store.put(localPhrase); // Använd put för att infoga
+        await tx.store.put(localPhrase);
         addedCount++;
       }
       await tx.done;
       console.log(`Successfully updated local DB with ${addedCount} phrases from Supabase.`);
       return { success: true, count: addedCount };
     } else {
-        return { success: true, count: 0 }; // Inget data att hämta
+        return { success: true, count: 0 };
     }
   } catch (err: any) {
     console.error("Unexpected error during sync from Supabase:", err);
@@ -131,8 +116,8 @@ export const syncFromSupabase = async (): Promise<{ success: boolean; count: num
 };
 
 /**
- * Skickar alla lokala fraser till Supabase (infogar nya, uppdaterar existerande).
- * Anropas från knappen "Synka till Supabase".
+ * Sends all local phrases to Supabase (inserts new, updates existing).
+ * Called from the "Sync to Supabase" button.
  */
 export const syncToSupabase = async (): Promise<{ success: boolean; upsertedCount: number; error?: string }> => {
   console.log("Attempting to sync TO Supabase...");
@@ -152,31 +137,30 @@ export const syncToSupabase = async (): Promise<{ success: boolean; upsertedCoun
         return { success: true, upsertedCount: 0 };
     }
 
-    // Mappa lokala data till Supabase-format (ta bort compositeKey)
+    // Map local data to Supabase format (remove compositeKey)
     const supabasePhrases = localPhrases.map(p => ({
-        created: p.created, // Se till att detta är ett giltigt Supabase timestamp format
+        created: p.created,
         original: p.original,
         translation: p.translation,
         category: p.category,
+        favorite: p.favorite,
     }));
 
-    // Använd upsert för att infoga/uppdatera baserat på primärnyckeln (original, translation)
+    // Use upsert to insert/update based on primary key (original, translation)
     const { data, error, count } = await supabase
       .from(SUPABASE_TABLE)
       .upsert(supabasePhrases, {
-         // Supabase använder primärnyckeln per automatik för upsert, ingen onConflict behövs här
-         // om primärnyckeln är korrekt definierad i DB (vilket den är)
+         // Supabase uses the primary key for upsert automatically if defined in DB
       })
-      .select(); // select() för att returnera de påverkade raderna
+      .select();
 
     if (error) {
       console.error("Error upserting to Supabase:", error);
       return { success: false, upsertedCount: 0, error: error.message };
     }
 
-    const upsertedCount = data?.length ?? count ?? 0; // Ta längden på returnerad data, eller count om data är null
+    const upsertedCount = data?.length ?? count ?? 0;
     console.log(`Successfully upserted ${upsertedCount} phrases to Supabase.`);
-    // Om count är null/undefined och data är tomt, kan det betyda att inga rader ändrades
     if (upsertedCount === 0 && localPhrases.length > 0){
         console.log("Note: Upsert completed, but no rows were reported as changed/added. Data might have been identical.");
     }
@@ -190,14 +174,23 @@ export const syncToSupabase = async (): Promise<{ success: boolean; upsertedCoun
 };
 
 
-// --- Lokala CRUD-operationer (interagerar endast med IndexedDB) ---
+// --- Local CRUD operations (IndexedDB only) ---
 
 /**
- * Hämtar fraser från IndexedDB.
+ * Fetches phrases from IndexedDB.
  */
 export const getPhrases = async (query?: string): Promise<Phrase[]> => {
   const db = await initDatabase();
-  const allPhrases = await db.getAll(STORE_NAME);
+  const allPhrasesRaw = await db.getAll(STORE_NAME);
+  // Ensure all fields exist and favorite is always boolean
+  const allPhrases: Phrase[] = allPhrasesRaw.map((p) => ({
+    created: p.created,
+    original: p.original,
+    translation: p.translation,
+    category: p.category,
+    favorite: typeof p.favorite === "boolean" ? p.favorite : false,
+    compositeKey: p.compositeKey,
+  }));
   console.log(`Fetched ${allPhrases.length} phrases from local IndexedDB`);
 
   if (!query) return allPhrases;
@@ -211,35 +204,34 @@ export const getPhrases = async (query?: string): Promise<Phrase[]> => {
 };
 
 /**
- * Lägger till en fras i IndexedDB.
+ * Adds a phrase to IndexedDB.
  */
 export const addPhrase = async (phrase: Omit<Phrase, 'compositeKey'>): Promise<void> => {
   const db = await initDatabase();
-  const phraseWithKey = ensureCompositeKey(phrase); // Skapa objekt för IndexedDB
+  const phraseWithKey = ensureCompositeKey(phrase);
   try {
     await db.add(STORE_NAME, phraseWithKey);
     console.log("Phrase added to local DB.");
   } catch (error: any) {
      console.error("Error adding phrase to local DB:", error);
       if (error.name !== 'ConstraintError') {
-           throw error; // Kasta vidare andra fel
+           throw error;
       } else {
           console.warn(`Phrase with key "${phraseWithKey.compositeKey}" already exists locally.`);
-          // Överväg att uppdatera istället om det är önskat beteende
+          // Consider updating instead if desired
           // await updatePhrase(phraseWithKey);
       }
   }
 };
 
 /**
- * Uppdaterar en fras i IndexedDB.
+ * Updates a phrase in IndexedDB.
  */
 export const updatePhrase = async (phrase: Phrase): Promise<void> => {
   const db = await initDatabase();
-  // Säkerställ composite key innan lagring
   const phraseWithKey = ensureCompositeKey(phrase);
   try {
-      await db.put(STORE_NAME, phraseWithKey); // put uppdaterar eller infogar
+      await db.put(STORE_NAME, phraseWithKey);
       console.log("Phrase updated/put locally.");
   } catch(error) {
        console.error("Error updating/putting phrase locally:", error);
@@ -248,11 +240,11 @@ export const updatePhrase = async (phrase: Phrase): Promise<void> => {
 };
 
 /**
- * Tar bort en fras från IndexedDB baserat på dess compositeKey.
+ * Removes a phrase from IndexedDB by its compositeKey.
  */
 export const removePhrase = async (phrase: Phrase): Promise<void> => {
   const db = await initDatabase();
-  const key = phrase.compositeKey; // Använd befintlig compositeKey
+  const key = phrase.compositeKey;
    if (!key) {
       console.error("Cannot remove phrase, compositeKey is missing:", phrase);
       return;
@@ -267,8 +259,9 @@ export const removePhrase = async (phrase: Phrase): Promise<void> => {
 };
 
 
-// --- Övriga Funktioner (påverkar endast IndexedDB) ---
-
+/**
+ * Adds missing default phrases from JSON to local DB, but does not remove any.
+ */
 export const syncDefaultPhrases = async (): Promise<void> => {
   const db = await initDatabase();
   const existing = await db.getAll(STORE_NAME);
@@ -276,7 +269,6 @@ export const syncDefaultPhrases = async (): Promise<void> => {
   let newCount = 0;
   const tx = db.transaction(STORE_NAME, 'readwrite');
   for (const phrase of phrasesData) {
-     // Explicit type assertion if necessary
     const phraseWithKey = ensureCompositeKey(phrase as Omit<Phrase, 'compositeKey'>);
     if (!existingKeys.has(phraseWithKey.compositeKey)) {
       await tx.store.add(phraseWithKey);
@@ -287,7 +279,10 @@ export const syncDefaultPhrases = async (): Promise<void> => {
   console.log(`Synced ${newCount} default phrases from JSON manually to local DB.`);
 };
 
-
+/**
+ * Overwrites all local phrases with those from JSON.
+ * Returns number of removed and added phrases.
+ */
 export const overwriteLocalPhrases = async (): Promise<{ removedCount: number; addedCount: number }> => {
   const db = await initDatabase();
   const tx = db.transaction(STORE_NAME, 'readwrite');
@@ -309,6 +304,3 @@ export const overwriteLocalPhrases = async (): Promise<{ removedCount: number; a
   console.log(`Overwrote local phrases from JSON. Removed approx ${removedCount}, added ${addedCount}.`);
   return { removedCount, addedCount };
 };
-
-// Ta bort event listeners för online/offline - synk är nu manuell
-// window.removeEventListener('online', syncLocalChangesToSupabase);

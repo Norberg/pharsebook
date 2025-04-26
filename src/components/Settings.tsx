@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import axios from "axios";
 import "./Settings.css";
 import { syncFromSupabase, syncToSupabase } from "../utils/phraseUtils";
+import { supabase } from "../utils/supabaseClient"; // Importera klient (se nästa fil)
 
-// File server base URL as a constant
 const FILE_SERVER_URL = "http://192.168.1.224:8075/save";
 
 interface SettingsProps {
@@ -22,6 +22,25 @@ const Settings: React.FC<SettingsProps> = ({
 }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [phraseCount, setPhraseCount] = useState(0);
+  const [email, setEmail] = useState("");
+  const [user, setUser] = useState<any>(null);
+  const [authMsg, setAuthMsg] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // Hämta användare vid mount och på auth change
+  useEffect(() => {
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      setUser(data.user);
+    };
+    getUser();
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
 
   const handleOverwriteClick = async () => {
     const { removedCount } = await onOverwrite();
@@ -89,19 +108,65 @@ const Settings: React.FC<SettingsProps> = ({
     }
   };
 
+  // Magic link login/signup
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setAuthMsg("");
+    const { error } = await supabase.auth.signInWithOtp({ email });
+    if (error) {
+      setAuthMsg(error.message);
+    } else {
+      setAuthMsg("Check your email for the magic link!");
+    }
+    setLoading(false);
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  };
+
   return (
     <div className="settings-page">
       <button onClick={onBack} className="back-button">
         <FaArrowLeft /> Tillbaka
       </button>
       <h2>Inställningar</h2>
+      {!user ? (
+        <form className="auth-form" onSubmit={handleLogin}>
+          <label>
+            Logga in / skapa konto med e-post:
+            <input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              disabled={loading}
+            />
+          </label>
+          <button type="submit" disabled={loading || !email}>
+            {loading ? "Skickar länk..." : "Skicka magic link"}
+          </button>
+          {authMsg && <div className="auth-msg">{authMsg}</div>}
+        </form>
+      ) : (
+        <div className="user-info">
+          <span>Inloggad som: {user.email}</span>
+          <button onClick={handleLogout}>Logga ut</button>
+        </div>
+      )}
       <div className="settings-buttons">
         <button onClick={handleExportClick}>Exportera fraser</button>
         <button onClick={onSync}>Synka fraser</button>
         <button onClick={handleOverwriteClick}>Skriv över lokala fraser</button>
         <button onClick={handleUploadToFileServer}>Ladda upp fraser till filserver</button>
-        <button onClick={handleSyncFromSupabase}>Synka från Supabase</button>
-        <button onClick={handleSyncToSupabase}>Synka till Supabase</button>
+        {user && (
+          <>
+            <button onClick={handleSyncFromSupabase}>Synka från Supabase</button>
+            <button onClick={handleSyncToSupabase}>Synka till Supabase</button>
+          </>
+        )}
       </div>
       {showConfirmation && (
         <div className="confirmation-dialog">

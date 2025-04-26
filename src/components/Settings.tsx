@@ -3,6 +3,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import "./Settings.css";
 import { syncFromSupabase, syncToSupabase } from "../utils/phraseUtils";
 import { supabase } from "../utils/supabaseClient"; // Importera klient (se nästa fil)
+import CategoryManager from "./CategoryManager";
 
 interface SettingsProps {
   onBack: () => void;
@@ -23,6 +24,7 @@ const Settings: React.FC<SettingsProps> = ({
   const [user, setUser] = useState<any>(null);
   const [authMsg, setAuthMsg] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showCatMgr, setShowCatMgr] = useState(false);
 
   // Hämta användare vid mount och på auth change
   useEffect(() => {
@@ -153,7 +155,13 @@ const Settings: React.FC<SettingsProps> = ({
             <button onClick={handleSyncToSupabase}>Synka till Supabase</button>
           </>
         )}
+        <button onClick={() => setShowCatMgr(true)}>Hantera kategorier</button>
       </div>
+      {showCatMgr && (
+        <CategoryManager
+          onClose={() => setShowCatMgr(false)}
+        />
+      )}
       {showConfirmation && (
         <div className="confirmation-dialog">
           <p>

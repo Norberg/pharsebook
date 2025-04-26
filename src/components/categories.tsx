@@ -1,21 +1,32 @@
-import { JSX } from "react";
+import React, { useState, useEffect } from "react";
+import categoriesJson from "../data/categories.json";
+import { getCategories, Category } from "../utils/phraseUtils";
 
-export const categoryIcons: Record<string, JSX.Element> = {
-  "Hälsningar": <span className="emoji" role="img" aria-label="Hälsningar">💬</span>,
-  "Mat & dryck": <span className="emoji" role="img" aria-label="Mat & dryck">🍽️</span>,
-  "Artighet": <span className="emoji" role="img" aria-label="Artighet">🤝</span>,
-  "Shopping": <span className="emoji" role="img" aria-label="Shopping">🏷️</span>,
-  "Vardag": <span className="emoji" role="img" aria-label="Vardag">🏠</span>,
-  "Tid": <span className="emoji" role="img" aria-label="Tid">⏰</span>,
-  "Kalender": <span className="emoji" role="img" aria-label="Kalendar">📅</span>,
-  "Resa": <span className="emoji" role="img" aria-label="Resa">✈️</span>,
-  "Kärlek": <span className="emoji" role="img" aria-label="Kärlek">❤️</span>,
-  "Presentation": <span className="emoji" role="img" aria-label="Presentation">👤</span>,
-  "Färg": <span className="emoji" role="img" aria-label="Färg">🎨</span>,
+// Synkron lista av kategori-namn (samma som tidigare hårdkodat)
+export const categories: string[] = (categoriesJson as Category[]).map(c => c.name);
+
+// Hook för att läsa in kategorier från IndexedDB
+export const useCategories = (): Category[] => {
+  const [cats, setCats] = useState<Category[]>([]);
+  useEffect(() => {
+    (async () => {
+      const loaded = await getCategories();
+      setCats(loaded);
+    })();
+  }, []);
+  return cats;
 };
 
-export const categories = Object.keys(categoryIcons);
-
-export const getCategoryIcon = (category: string): JSX.Element => {
-  return categoryIcons[category] || <span className="emoji" role="img" aria-label="Default">🏷️</span>;
+// Returnerar emoji-ikon för en kategori; fallback till JSON-data
+export const getCategoryIcon = (
+  name: string,
+  dynamicList?: Category[]
+): JSX.Element => {
+  const list = dynamicList ?? (categoriesJson as Category[]);
+  const cat = list.find(c => c.name === name);
+  return (
+    <span className="emoji" role="img" aria-label={name}>
+      {cat?.icon ?? "🏷️"}
+    </span>
+  );
 };

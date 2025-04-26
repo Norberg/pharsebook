@@ -1,5 +1,6 @@
 import { openDB, IDBPDatabase } from "idb";
 import phrasesData from "../data/phrases.json";
+import categoriesData from "../data/categories.json";
 import { supabase } from "./supabaseClient"; // Use shared client
 
 // Phrase object interface
@@ -12,9 +13,18 @@ export interface Phrase {
   compositeKey?: string;
 }
 
+// Category object interface
+export interface Category {
+  name: string;
+  icon: string;
+  position: number;
+}
+
 const DB_NAME = "PhrasebookDB";
 const STORE_NAME = "phrases";
-const SUPABASE_TABLE = 'phrases';
+const CAT_STORE = "categories";
+const SUPA_PHRASE_TABLE = "phrases";
+const SUPA_CAT_TABLE = "categories";
 
 // --- IndexedDB Functions ---
 
@@ -29,34 +39,48 @@ const ensureCompositeKey = (phrase: Omit<Phrase, 'compositeKey'> | Phrase): Phra
 
 // Initialize IndexedDB and populate with JSON data if empty
 export const initDatabase = async (): Promise<IDBPDatabase> => {
-  const db = await openDB(DB_NAME, 1, {
+  console.log("Initializing IndexedDB...");
+  const db = await openDB(DB_NAME, 2, {
+    async onBlocked() {
+      console.warn("Database is blocked. Please close all other tabs using this database.");
+    },
     upgrade(db) {
       if (!db.objectStoreNames.contains(STORE_NAME)) {
-        const store = db.createObjectStore(STORE_NAME, { keyPath: "compositeKey" });
-        store.createIndex("category", "category");
-        store.createIndex("favorite", "favorite");
+        const ps = db.createObjectStore(STORE_NAME, { keyPath: "compositeKey" });
+        ps.createIndex("category", "category");
+        ps.createIndex("favorite", "favorite");
         console.log("Created/Upgraded object store with compositeKey");
+      }
+      if (!db.objectStoreNames.contains(CAT_STORE)) {
+        const cs = db.createObjectStore(CAT_STORE, { keyPath: "name" });
+        cs.createIndex("position", "position");
+        console.log("Created/Upgraded categories store");
       }
     },
   });
 
-  const tx = db.transaction(STORE_NAME, 'readonly');
-  const count = await tx.store.count();
-  await tx.done;
-
-  if (count === 0) {
-    console.log("IndexedDB is empty, populating with initial data from JSON...");
-    const addTx = db.transaction(STORE_NAME, 'readwrite');
-    let newCount = 0;
-    for (const phrase of phrasesData) {
-      const phraseWithKey = ensureCompositeKey(phrase as Omit<Phrase, 'compositeKey'>);
-      await addTx.store.add(phraseWithKey);
-      newCount++;
+  // populate phrases if empty
+  const pCount = await db.transaction(STORE_NAME).store.count();
+  if (pCount === 0) {
+    console.log("IndexedDB is empty, populating phrases with initial data from JSON...");
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    for (const p of phrasesData) {
+      await tx.store.add(ensureCompositeKey(p as any));
     }
-    await addTx.done;
-    console.log(`Added ${newCount} default phrases from JSON to IndexedDB.`);
-  } else {
-    console.log("IndexedDB already contains data, skipping initial JSON population.");
+    await tx.done;
+    console.log(`Added default phrases from JSON to IndexedDB.`);
+  }
+
+  // populate categories if empty
+  const cCount = await db.transaction(CAT_STORE).store.count();
+  if (cCount === 0) {
+    console.log("IndexedDB is empty, populating categories with initial data from JSON...");
+    const tx = db.transaction(CAT_STORE, "readwrite");
+    for (const c of categoriesData) {
+      await tx.store.add(c);
+    }
+    await tx.done;
+    console.log(`Added default categories from JSON to IndexedDB.`);
   }
 
   return db;
@@ -78,7 +102,7 @@ export const syncFromSupabase = async (): Promise<{ success: boolean; count: num
 
   try {
     const { data, error } = await supabase
-      .from(SUPABASE_TABLE)
+      .from(SUPA_PHRASE_TABLE)
       .select('*');
 
     if (error) {
@@ -148,7 +172,7 @@ export const syncToSupabase = async (): Promise<{ success: boolean; upsertedCoun
 
     // Use upsert to insert/update based on primary key (original, translation)
     const { data, error, count } = await supabase
-      .from(SUPABASE_TABLE)
+      .from(SUPA_PHRASE_TABLE)
       .upsert(supabasePhrases, {
          // Supabase uses the primary key for upsert automatically if defined in DB
       })
@@ -173,6 +197,65 @@ export const syncToSupabase = async (): Promise<{ success: boolean; upsertedCoun
   }
 };
 
+// --- Category CRUD & sync ---
+
+/**
+ * Fetches categories from IndexedDB.
+ */
+export const getCategories = async (): Promise<Category[]> => {
+  const db = await initDatabase();
+  return db.getAllFromIndex(CAT_STORE, "position");
+};
+
+/**
+ * Adds a category to IndexedDB.
+ */
+export const addCategory = async (cat: Category) => {
+  const db = await initDatabase();
+  await db.add(CAT_STORE, cat);
+};
+
+/**
+ * Updates a category in IndexedDB.
+ */
+export const updateCategory = async (cat: Category) => {
+  const db = await initDatabase();
+  await db.put(CAT_STORE, cat);
+};
+
+/**
+ * Removes a category from IndexedDB by its name.
+ */
+export const removeCategory = async (name: string) => {
+  const db = await initDatabase();
+  await db.delete(CAT_STORE, name);
+};
+
+/**
+ * Fetches all categories from Supabase and overwrites local IndexedDB.
+ */
+export const syncCategoriesFromSupabase = async (): Promise<void> => {
+  if (!navigator.onLine) throw new Error("Offline");
+  const { data, error } = await supabase.from(SUPA_CAT_TABLE).select("*");
+  if (error) throw error;
+  const db = await initDatabase();
+  const tx = db.transaction(CAT_STORE, "readwrite");
+  await tx.store.clear();
+  for (const c of data || []) {
+    await tx.store.add(c as Category);
+  }
+  await tx.done;
+};
+
+/**
+ * Sends all local categories to Supabase (inserts new, updates existing).
+ */
+export const syncCategoriesToSupabase = async (): Promise<void> => {
+  if (!navigator.onLine) throw new Error("Offline");
+  const cats = await getCategories();
+  const { error } = await supabase.from(SUPA_CAT_TABLE).upsert(cats);
+  if (error) throw error;
+};
 
 // --- Local CRUD operations (IndexedDB only) ---
 
@@ -244,20 +327,16 @@ export const updatePhrase = async (phrase: Phrase): Promise<void> => {
  */
 export const removePhrase = async (phrase: Phrase): Promise<void> => {
   const db = await initDatabase();
-  const key = phrase.compositeKey;
-   if (!key) {
-      console.error("Cannot remove phrase, compositeKey is missing:", phrase);
-      return;
-   }
+  // ensure we have a proper compositeKey
+  const { compositeKey: key } = ensureCompositeKey(phrase);
   try {
-    await db.delete(STORE_NAME, key);
+    await db.delete(STORE_NAME, key!);
     console.log(`Phrase with key "${key}" removed locally.`);
   } catch(error) {
-      console.error(`Error removing phrase with key "${key}" locally:`, error);
-      throw error;
+    console.error(`Error removing phrase with key "${key}" locally:`, error);
+    throw error;
   }
 };
-
 
 /**
  * Adds missing default phrases from JSON to local DB, but does not remove any.

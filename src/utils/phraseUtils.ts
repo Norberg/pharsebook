@@ -3,7 +3,6 @@ import phrasesData from "../data/phrases.json";
 import categoriesData from "../data/categories.json";
 import { supabase } from "./supabaseClient"; // Use shared client
 
-
 // Phrase object interface
 export interface Phrase {
   created: string; // ISO 8601 format for compatibility
@@ -229,6 +228,81 @@ export const syncToSupabase = async (): Promise<{ success: boolean; upsertedCoun
   }
 };
 
+// Restore diff interface
+export interface SyncDiff {
+  same: boolean;
+  localOnly: Phrase[];
+  supabaseOnly: Phrase[];
+  changed: { local: Phrase; supabase: Phrase }[];
+}
+
+// Compute diff without mutating anything
+export async function syncWithSupabase(): Promise<SyncDiff> {
+  const local = await getPhrases();
+  const { data: supa } = await supabase
+    .from("phrases")
+    .select("*");
+
+  const byKey = (p: Phrase) => `${p.original}→${p.translation}`;
+  const localMap = new Map(local.map(p => [byKey(p), p]));
+  const supaMap = new Map((supa||[]).map(p => [byKey(p), p]));
+
+  const localOnly = local.filter(p => !supaMap.has(byKey(p)));
+  const supabaseOnly = (supa||[]).filter(p => !localMap.has(byKey(p)));
+
+  const changed: { local: Phrase; supabase: Phrase }[] = [];
+  for (const [key, localP] of localMap) {
+    const supaP = supaMap.get(key);
+    if (supaP) {
+      if (localP.category !== supaP.category || localP.favorite !== supaP.favorite) {
+        changed.push({ local: localP, supabase: supaP });
+      }
+    }
+  }
+
+  return {
+    same: localOnly.length === 0 && supabaseOnly.length === 0 && changed.length === 0,
+    localOnly,
+    supabaseOnly,
+    changed
+  };
+}
+
+// Merge uniques both ways
+export async function mergeWithSupabase() {
+  const diff = await syncWithSupabase();
+
+  // --- NYTT: samla både localOnly OCH changed för upsert ---
+  const toUpsert = [
+    // Nya lokala fraser
+    ...diff.localOnly.map(({ compositeKey, ...p }) => p),
+    // Ändrade fraser (lokalt överskriv supabase)
+    ...diff.changed.map(({ local }) => {
+      const { compositeKey, ...p } = local;
+      return p;
+    })
+  ];
+
+  if (toUpsert.length > 0) {
+    await supabase.from(SUPA_PHRASE_TABLE).upsert(toUpsert);
+  }
+
+  // Befintliga på supabase som inte finns lokalt
+  for (const p of diff.supabaseOnly) {
+    await addPhrase(p);
+  }
+}
+
+// Overwrite local store with Supabase
+export async function applySupabaseOnly() {
+  const { data: supa } = await supabase.from("phrases").select("*");
+  const db = await initDatabase();
+  await db.clear(STORE_NAME);
+  for (const p of supa||[]) {
+    await addPhrase(p);
+  }
+}
+
 // --- Category CRUD & sync ---
 
 /**
@@ -426,3 +500,32 @@ export const overwriteLocalPhrases = async (): Promise<{ removedCount: number; a
   console.log(`Overwrote local phrases from JSON. Removed approx ${removedCount}, added ${addedCount}.`);
   return { removedCount, addedCount };
 };
+
+/**
+ * Applies local-only changes to Supabase.
+ */
+export async function applyLocalOnly() {
+  // fetch current user
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const userId = user?.id;
+  if (!userId) throw new Error("Not authenticated");
+
+  // delete only this user's phrases on Supabase
+  await supabase
+    .from("phrases")
+    .delete()
+    .eq("user_id", userId);
+
+  // re‑insert local phrases with user_id
+  const local = await getPhrases();
+  await supabase
+    .from("phrases")
+    .insert(
+      local.map(({ compositeKey, ...p }) => ({
+        ...p,
+        user_id: userId,
+      }))
+    );
+}

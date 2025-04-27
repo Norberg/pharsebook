@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import "./Settings.css";
-import { syncFromSupabase, syncToSupabase } from "../utils/phraseUtils";
+import {
+  syncWithSupabase,
+  mergeWithSupabase,
+  applyLocalOnly,
+  applySupabaseOnly,
+  SyncDiff,
+} from "../utils/phraseUtils";
 import { supabase } from "../utils/supabaseClient"; // Importera klient (se nästa fil)
 import CategoryManager from "./CategoryManager";
 
@@ -25,6 +31,11 @@ const Settings: React.FC<SettingsProps> = ({
   const [authMsg, setAuthMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [showCatMgr, setShowCatMgr] = useState(false);
+  const [syncDiff, setSyncDiff] = useState<SyncDiff | null>(null);
+  const [showSyncOptions, setShowSyncOptions] = useState(false);
+  const [syncChoice, setSyncChoice] = useState<"merge" | "local" | "supabase" | null>(null);
+  const [showSyncConfirm, setShowSyncConfirm] = useState(false);
+  const [syncLoading, setSyncLoading] = useState(false);
 
   // Hämta användare vid mount och på auth change
   useEffect(() => {
@@ -71,25 +82,33 @@ const Settings: React.FC<SettingsProps> = ({
     setShowConfirmation(false);
   };
 
-  const handleSyncFromSupabase = async () => {
-    const result = await syncFromSupabase();
-    if (result.success) {
-      alert(`Synkade ${result.count} fraser från Supabase!`);
+  const handleSyncClick = async () => {
+    setSyncLoading(true);
+    const diff = await syncWithSupabase();
+    setSyncLoading(false);
+    if (diff.same) {
+      alert("Allt är samma både lokalt och på Supabase.");
     } else {
-      alert(`Fel vid synk från Supabase: ${result.error}`);
+      setSyncDiff(diff);
+      setShowSyncOptions(true);
     }
   };
 
-  const handleSyncToSupabase = async () => {
-    const result = await syncToSupabase();
-    if (result.success) {
-      alert(`Synkade ${result.upsertedCount} fraser till Supabase!`);
-    } else {
-      alert(`Fel vid synk till Supabase: ${result.error}`);
-    }
+  const confirmSync = async () => {
+    setShowSyncConfirm(false);
+    setShowSyncOptions(false);
+    setSyncLoading(true);
+    if (syncChoice === "merge") await mergeWithSupabase();
+    if (syncChoice === "local") await applyLocalOnly();
+    if (syncChoice === "supabase") await applySupabaseOnly();
+    setSyncLoading(false);
+    alert("Synkronisering klar.");
   };
 
-  // Magic link login/signup
+  const cancelSync = () => {
+    setShowSyncOptions(false);
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -129,7 +148,7 @@ const Settings: React.FC<SettingsProps> = ({
             <input
               type="email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
             />
@@ -150,10 +169,9 @@ const Settings: React.FC<SettingsProps> = ({
         <button onClick={onSync}>Uppdatera nya fraser från grundutbudet</button>
         <button onClick={handleOverwriteClick}>Ersätt alla lokala fraser med grundutbudet</button>
         {user && (
-          <>
-            <button onClick={handleSyncFromSupabase}>Synka från Supabase</button>
-            <button onClick={handleSyncToSupabase}>Synka till Supabase</button>
-          </>
+          <button onClick={handleSyncClick} disabled={syncLoading}>
+            {syncLoading ? "Laddar..." : "Synka med Supabase"}
+          </button>
         )}
         <button
           onClick={() => {
@@ -164,27 +182,78 @@ const Settings: React.FC<SettingsProps> = ({
           Hantera kategorier
         </button>
       </div>
-      {showCatMgr && (
-        <CategoryManager
-          onClose={() => setShowCatMgr(false)}
-        />
+      {showCatMgr && <CategoryManager onClose={() => setShowCatMgr(false)} />}
+      {showSyncOptions && syncDiff && (
+        <div className="sync-dialog">
+          <p>
+            Nya lokala: {syncDiff.localOnly.length}, nya på Supabase: {syncDiff.supabaseOnly.length}, ändrade: {syncDiff.changed.length}
+          </p>
+          <ul>
+            {syncDiff.localOnly.slice(0, 10).map((p, i) => (
+              <li key={`local-${i}`}>
+               <b>(Lokal)</b> {p.original} – {p.translation} 
+              </li>
+            ))}
+            {syncDiff.supabaseOnly.slice(0, 10).map((p, i) => (
+              <li key={`supa-${i}`}>
+                <b>(Supabase)</b> {p.original} – {p.translation}
+              </li>
+            ))}
+            {syncDiff.changed.slice(0, 10).map(({ local, supabase }, i) => (
+              <li key={`changed-${i}`}>
+                <b>(Ändrad)</b> {local.original} – {local.translation}: kategori  <b>(Lokal)</b> "{local.category}", <b>(Supabase)</b> "{supabase.category}"
+              </li>
+            ))}
+          </ul>
+          <button
+            onClick={() => {
+              setSyncChoice("merge");
+              setShowSyncConfirm(true);
+            }}
+          >
+            Slåihop
+          </button>
+          <button
+            onClick={() => {
+              setSyncChoice("local");
+              setShowSyncConfirm(true);
+            }}
+          >
+            Endast lokala
+          </button>
+          <button
+            onClick={() => {
+              setSyncChoice("supabase");
+              setShowSyncConfirm(true);
+            }}
+          >
+            Endast Supabase
+          </button>
+          <button onClick={cancelSync}>Avbryt</button>
+        </div>
+      )}
+      {showSyncConfirm && (
+        <div className="confirmation-dialog">
+          <p>Är du säker att du vill fortsätta?</p>
+          <button onClick={confirmSync}>Ja</button>
+          <button onClick={() => setShowSyncConfirm(false)}>Nej</button>
+        </div>
       )}
       {showConfirmation && (
         <div className="confirmation-dialog">
-          <p>
-            Är du säker på att du vill skriva över och tabort {phraseCount} fraser?
-          </p>
+          <p>Är du säker på att du vill skriva över och tabort {phraseCount} fraser?</p>
           <button onClick={confirmOverwrite}>Ja</button>
           <button onClick={cancelOverwrite}>Nej</button>
         </div>
       )}
       <footer className="build-info">
-        Phrasebook - build date: {new Date(__BUILD_DATE__).toLocaleString(undefined, {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
+        Phrasebook - build date:{" "}
+        {new Date(__BUILD_DATE__).toLocaleString(undefined, {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
         })}
       </footer>
     </div>

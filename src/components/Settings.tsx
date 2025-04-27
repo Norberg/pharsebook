@@ -220,7 +220,7 @@ const Settings: React.FC<SettingsProps> = ({
               setShowSyncConfirm(true);
             }}
           >
-            Endast lokala
+            Välj lokala
           </button>
           <button
             onClick={() => {
@@ -228,7 +228,7 @@ const Settings: React.FC<SettingsProps> = ({
               setShowSyncConfirm(true);
             }}
           >
-            Endast Supabase
+            Välj Supabase
           </button>
           <button onClick={cancelSync}>Avbryt</button>
         </div>

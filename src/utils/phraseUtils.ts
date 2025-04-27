@@ -39,7 +39,6 @@ export const ensureCompositeKey = (phrase: Omit<Phrase, 'compositeKey'> | Phrase
 
 // Initialize IndexedDB and populate with JSON data if empty
 export const initDatabase = async (): Promise<IDBPDatabase> => {
-  console.log("Initializing IndexedDB...");
   const db = await openDB(DB_NAME, 2, {
     async blocked() {
       console.warn("Database is blocked. Please close all other tabs using this database.");
@@ -92,7 +91,7 @@ export const initDatabase = async (): Promise<IDBPDatabase> => {
  * Fetches all phrases from Supabase and overwrites local IndexedDB.
  * Called from the "Sync from Supabase" button.
  */
-export const syncFromSupabase = async (): Promise<{ success: boolean; count: number; error?: string }> => {
+export const syncPhrasesFromSupabase = async (): Promise<{ success: boolean; count: number; error?: string }> => {
   console.log("Attempting to sync FROM Supabase...");
   if (!navigator.onLine) {
       const message = "Cannot sync from Supabase: No internet connection.";
@@ -129,15 +128,6 @@ export const syncFromSupabase = async (): Promise<{ success: boolean; count: num
       }
       await tx.done;
       console.log(`Successfully updated local DB with ${addedCount} phrases from Supabase.`);
-
-      // sync categories too
-      try {
-        await syncCategoriesFromSupabase();
-        console.log("Categories synced from Supabase.");
-      } catch (err) {
-        console.error("Failed to sync categories:", err);
-      }
-
       return { success: true, count: addedCount };
     } else {
         return { success: true, count: 0 };
@@ -152,7 +142,7 @@ export const syncFromSupabase = async (): Promise<{ success: boolean; count: num
  * Sends all local phrases to Supabase (inserts new, updates existing).
  * Called from the "Sync to Supabase" button.
  */
-export const syncToSupabase = async (): Promise<{ success: boolean; upsertedCount: number; error?: string }> => {
+export const syncPhrasesToSupabase = async (): Promise<{ success: boolean; upsertedCount: number; error?: string }> => {
   console.log("Attempting to sync TO Supabase...");
   if (!navigator.onLine) {
     const message = "Cannot sync to Supabase: No internet connection.";
@@ -269,38 +259,39 @@ export async function syncWithSupabase(): Promise<SyncDiff> {
 }
 
 // Merge uniques both ways
-export async function mergeWithSupabase() {
+export async function mergeWithSupabase(): Promise<void> {
+  // compute diff
   const diff = await syncWithSupabase();
-
-  // --- NYTT: samla både localOnly OCH changed för upsert ---
-  const toUpsert = [
-    // Nya lokala fraser
-    ...diff.localOnly.map(({ compositeKey, ...p }) => p),
-    // Ändrade fraser (lokalt överskriv supabase)
-    ...diff.changed.map(({ local }) => {
-      const { compositeKey, ...p } = local;
-      return p;
-    })
-  ];
-
-  if (toUpsert.length > 0) {
-    await supabase.from(SUPA_PHRASE_TABLE).upsert(toUpsert);
+  // push local-only phrases
+  if (diff.localOnly.length) {
+    await supabase
+      .from(SUPA_PHRASE_TABLE)
+      .upsert(diff.localOnly.map(p => ({
+        created: p.created,
+        original: p.original,
+        translation: p.translation,
+        category: p.category,
+        favorite: p.favorite,
+      })));
   }
-
-  // Befintliga på supabase som inte finns lokalt
-  for (const p of diff.supabaseOnly) {
-    await addPhrase(p);
+  // pull supabase-only phrases locally
+  if (diff.supabaseOnly.length) {
+    const db = await initDatabase();
+    const tx = db.transaction(STORE_NAME, "readwrite");
+    for (const p of diff.supabaseOnly) {
+      await tx.store.put(ensureCompositeKey(p));
+    }
+    await tx.done;
   }
+  // now merge categories
+  await mergeCategories();
 }
 
 // Overwrite local store with Supabase
 export async function applySupabaseOnly() {
-  const { data: supa } = await supabase.from("phrases").select("*");
-  const db = await initDatabase();
-  await db.clear(STORE_NAME);
-  for (const p of supa||[]) {
-    await addPhrase(p);
-  }
+  // Pull supabase‐only phrases & categories to local
+  await syncPhrasesFromSupabase();
+  await syncCategoriesFromSupabase();
 }
 
 // --- Category CRUD & sync ---
@@ -359,13 +350,60 @@ export const syncCategoriesFromSupabase = async (): Promise<void> => {
 export const syncCategoriesToSupabase = async (): Promise<void> => {
   if (!navigator.onLine) throw new Error("Offline");
   const cats = await getCategories();
-  const user = await supabase.auth.getUser();
-  const userId = user?.data?.user?.id;
+  const { data: userData } = await supabase.auth.getUser();
+  const userId = userData?.user?.id;
   if (!userId) throw new Error("Not authenticated");
+
+  // fetch remote category names
+  const { data: remoteRows, error: fetchErr } = await supabase
+    .from(SUPA_CAT_TABLE)
+    .select("name");
+  if (fetchErr) throw fetchErr;
+
+  const localNames = new Set(cats.map(c => c.name));
+  // remove remote categories not present locally
+  for (const r of remoteRows || []) {
+    if (!localNames.has(r.name)) {
+      await supabase
+        .from(SUPA_CAT_TABLE)
+        .delete()
+        .match({ name: r.name });
+    }
+  }
+
+  // upsert local categories with user_id
   const catsWithUserId = cats.map(cat => ({ ...cat, user_id: userId }));
-  const { error } = await supabase.from(SUPA_CAT_TABLE).upsert(catsWithUserId);
-  if (error) throw error;
+  const { error: upErr } = await supabase
+    .from(SUPA_CAT_TABLE)
+    .upsert(catsWithUserId);
+  if (upErr) throw upErr;
 };
+
+/**
+ * Merges categories between local IndexedDB and Supabase.
+ */
+export async function mergeCategories(): Promise<void> {
+  const local = await getCategories();
+  const { data: supa, error } = await supabase.from(SUPA_CAT_TABLE).select("*");
+  if (error) throw error;
+  const localNames = new Set(local.map(c => c.name));
+  const supaNames = new Set((supa||[]).map(c => c.name));
+
+  // push local-only cats to Supabase
+  const toUpsert = local.filter(c => !supaNames.has(c.name));
+  if (toUpsert.length) {
+    const { error: upErr } = await supabase.from(SUPA_CAT_TABLE).upsert(toUpsert);
+    if (upErr) throw upErr;
+  }
+
+  // pull supabase-only cats locally
+  const db = await initDatabase();
+  const tx = db.transaction(CAT_STORE, "readwrite");
+  for (const cat of (supa||[]).filter(c => !localNames.has(c.name))) {
+    await tx.store.add(cat as Category);
+  }
+  await tx.done;
+}
 
 // --- Local CRUD operations (IndexedDB only) ---
 
@@ -501,31 +539,7 @@ export const overwriteLocalPhrases = async (): Promise<{ removedCount: number; a
   return { removedCount, addedCount };
 };
 
-/**
- * Applies local-only changes to Supabase.
- */
 export async function applyLocalOnly() {
-  // fetch current user
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const userId = user?.id;
-  if (!userId) throw new Error("Not authenticated");
-
-  // delete only this user's phrases on Supabase
-  await supabase
-    .from("phrases")
-    .delete()
-    .eq("user_id", userId);
-
-  // re‑insert local phrases with user_id
-  const local = await getPhrases();
-  await supabase
-    .from("phrases")
-    .insert(
-      local.map(({ compositeKey, ...p }) => ({
-        ...p,
-        user_id: userId,
-      }))
-    );
+  await syncPhrasesToSupabase();
+  await syncCategoriesToSupabase();
 }

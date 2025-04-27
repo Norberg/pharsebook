@@ -39,9 +39,11 @@ const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const trimmedOriginal = original.trim();
+    const trimmedTranslation = translation.trim();
     const newPhrase: Phrase = {
-      original,
-      translation,
+      original: trimmedOriginal,
+      translation: trimmedTranslation,
       category,
       created: new Date().toISOString(),
       favorite: phraseToEdit ? phraseToEdit.favorite : false,
@@ -62,6 +64,16 @@ const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
     }
   };
 
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const pasted = e.clipboardData.getData("text/plain");
+    if (pasted.includes("\n")) {
+      e.preventDefault();
+      const [first, ...rest] = pasted.split(/\r?\n/);
+      setOriginal(first.trim());
+      setTranslation(rest.map(line => line.trim()).join(" "));
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="formContainer">
       <h2>{phraseToEdit ? "Redigera Fras" : "Lägg till Fras"}</h2>
@@ -71,6 +83,8 @@ const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
           placeholder="Original"
           value={original}
           onChange={(e) => setOriginal(e.target.value)}
+          onBlur={() => setOriginal(original.trim())}
+          onPaste={handlePaste}
           className="inputField"
         />
       </div>
@@ -80,6 +94,7 @@ const AddPhraseForm: React.FC<AddPhraseFormProps> = ({
           placeholder="Översättning"
           value={translation}
           onChange={(e) => setTranslation(e.target.value)}
+          onBlur={() => setTranslation(translation.trim())}
           className="inputField"
         />
       </div>

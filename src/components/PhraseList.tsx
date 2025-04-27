@@ -18,12 +18,21 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
   const dynamicCats = useCategories();
 
   const groupedPhrases = React.useMemo(() => {
-    return phrases.reduce((acc, phrase) => {
+    const grouped = phrases.reduce((acc, phrase) => {
       const category = phrase.category || "Uncategorized";
       if (!acc[category]) acc[category] = [];
       acc[category].push(phrase);
       return acc;
     }, {} as Record<string, Phrase[]>);
+
+    // Sortera varje kategori efter created, senaste först
+    Object.keys(grouped).forEach((cat) => {
+      grouped[cat].sort((a, b) =>
+        new Date(b.created ?? 0).getTime() - new Date(a.created ?? 0).getTime()
+      );
+    });
+
+    return grouped;
   }, [phrases]);
 
   useEffect(() => {

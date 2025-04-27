@@ -102,6 +102,7 @@ const Settings: React.FC<SettingsProps> = ({
     if (syncChoice === "local") await applyLocalOnly();
     if (syncChoice === "supabase") await applySupabaseOnly();
     setSyncLoading(false);
+    onSync();                          // ← ny rad: refresha i‑minnet‑lista
     alert("Synkronisering klar.");
   };
 

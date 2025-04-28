@@ -1,7 +1,8 @@
 import React, { useState, useEffect, JSX } from "react";
 import { Phrase } from "../utils/phraseUtils";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaVolumeUp } from "react-icons/fa"; // lägg till ikon
 import { useCategories } from "./categories";
+import { initializeSpeech, speakText } from "../utils/speechUtils"; // import speechUtils
 import "./PhraseList.css";
 import ItalianNumbers from "./Numbers";
 
@@ -58,6 +59,14 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
     });
   };
 
+  // Ny funktion för att initiera och spela upp text
+  const handlePlay = async (text: string) => {
+    const ready = await initializeSpeech();
+    if (ready) {
+      speakText(text);
+    }
+  };
+
   const ordered = dynamicCats
     .map((c) => c.name)
     .filter((name) => groupedPhrases[name]);
@@ -82,11 +91,19 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
                     <span>
                       <strong>{phrase.original}</strong> - {phrase.translation}
                     </span>
-                    {onEdit && (
-                      <button onClick={() => onEdit(phrase)} className="edit-button">
-                        <FaEdit />
+                    <div>
+                      <button
+                        onClick={() => handlePlay(phrase.translation)}
+                        className="play-button"
+                      >
+                        <FaVolumeUp />
                       </button>
-                    )}
+                      {onEdit && (
+                        <button onClick={() => onEdit(phrase)} className="edit-button">
+                          <FaEdit />
+                        </button>
+                      )}
+                    </div>
                   </li>
                 ))}
               </ul>

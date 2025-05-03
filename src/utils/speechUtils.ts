@@ -49,7 +49,9 @@ export const speakText = (text: string, lang: string = 'it-IT'): boolean => {
         return false;
     }
 
-    var voice = easySpeech.voices().find(v => v.lang === lang);
+    // Normalize lang for comparison (e.g. it-IT vs it_IT)
+    const normalizeLang = (l: string) => l.replace(/[-_]/g, '').toLowerCase();
+    var voice = easySpeech.voices().find(v => normalizeLang(v.lang) === normalizeLang(lang));
     if (!voice) {
         // Fallback, works on firefox/linux
         voice = easySpeech.voices()
@@ -58,6 +60,7 @@ export const speakText = (text: string, lang: string = 'it-IT'): boolean => {
     }
     if (!voice) {
         console.warn(`No voice found for language: ${lang}. Using default.`);
+        console.info("Available languages:", easySpeech.voices().map(v => v.lang));
     }
     console.log(`Using voice: ${voice?.name || 'default'} for language: ${lang}`);
 

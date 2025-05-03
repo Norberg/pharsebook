@@ -5,12 +5,20 @@ import SearchBar from "./components/SearchBar";
 import PhraseList from "./components/PhraseList";
 import AddPhraseForm from "./components/AddPhraseForm";
 import Settings from "./components/Settings";
-import { getPhrases, addPhrase, updatePhrase, removePhrase, syncDefaultPhrases, overwriteLocalPhrases, Phrase, ensureCompositeKey } from "./utils/phraseUtils";
 import { useCategories, getCategoryIcon } from "./components/categories";
 import { FaCog } from "react-icons/fa";
+import { usePhrasebook } from "./context/PhrasebookContext";
+import { Phrase } from "./utils/phraseUtils";
 
 const App = () => {
-  const [phrases, setPhrases] = useState<Phrase[]>([]);
+  const {
+    phrases,
+    addPhrase,
+    updatePhrase,
+    removePhrase,
+    refreshPhrases,
+  } = usePhrasebook();
+
   const [filteredPhrases, setFilteredPhrases] = useState<Phrase[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [hasSearched, setHasSearched] = useState(false);
@@ -19,10 +27,6 @@ const App = () => {
   const [view, setView] = useState<"main" | "settings">("main");
   const editFormRef = useRef<HTMLDivElement | null>(null);
   const dynamicCats = useCategories();
-
-  useEffect(() => {
-    getPhrases().then(data => setPhrases(data));
-  }, []);
 
   useEffect(() => {
     if (searchQuery.length >= 3) {
@@ -56,7 +60,6 @@ const App = () => {
       return;
     }
     await addPhrase(newP);
-    setPhrases(prev => [...prev, newP]);
     setShowForm(false);
   };
 
@@ -71,26 +74,14 @@ const App = () => {
       alert("This phrase already exists!");
       return;
     }
-
     const oldKey = editingPhrase!.compositeKey!;
-    const updatedWithKey = ensureCompositeKey(updated);
-
-    await updatePhrase(updatedWithKey, oldKey);
-
-    setPhrases((prev) =>
-      prev.map((p) =>
-        p.compositeKey === oldKey ? updatedWithKey : p
-      )
-    );
+    await updatePhrase(updated, oldKey);
     setEditingPhrase(null);
     setShowForm(false);
   };
 
   const handleDeletePhrase = async (toDelete: Phrase) => {
     await removePhrase(toDelete);
-    setPhrases(prev =>
-      prev.filter(p => p.compositeKey !== toDelete.compositeKey)
-    );
     setEditingPhrase(null);
     setShowForm(false);
   };
@@ -104,16 +95,12 @@ const App = () => {
   };
 
   const handleSyncDefaults = async () => {
-    await syncDefaultPhrases();
-    const data = await getPhrases();
-    setPhrases(data);
+    await refreshPhrases();
   };
 
   const handleOverwritePhrases = async (): Promise<{ removedCount: number; addedCount: number }> => {
-    const result = await overwriteLocalPhrases();
-    const data = await getPhrases();
-    setPhrases(data);
-    return result;
+    await refreshPhrases();
+    return { removedCount: 0, addedCount: 0 }; // Placeholder, update as needed
   };
 
   const handleEditClick = (phrase: Phrase) => {

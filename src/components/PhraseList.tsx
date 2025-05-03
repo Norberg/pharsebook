@@ -18,6 +18,7 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
   const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
   const dynamicCats = useCategories();
 
+  // Group phrases by category and sort each group by creation date (latest first)
   const groupedPhrases = React.useMemo(() => {
     const grouped = phrases.reduce((acc, phrase) => {
       const category = phrase.category || "Uncategorized";
@@ -26,7 +27,7 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
       return acc;
     }, {} as Record<string, Phrase[]>);
 
-    // Sortera varje kategori efter created, senaste först
+    // Sort each category group by created date (latest first)
     Object.keys(grouped).forEach((cat) => {
       grouped[cat].sort((a, b) =>
         new Date(b.created ?? 0).getTime() - new Date(a.created ?? 0).getTime()
@@ -36,6 +37,7 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
     return grouped;
   }, [phrases]);
 
+  // Expand/collapse logic for categories
   useEffect(() => {
     if (expandAll) {
       // Expand all categories when expandAll is true
@@ -46,6 +48,7 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
     }
   }, [expandAll, groupedPhrases, searchQuery]);
 
+  // Toggle expand/collapse for a category (unless expandAll is true)
   const handleCategoryClick = (category: string) => {
     if (expandAll) return; // Prevent manual collapsing when expandAll is true
     setExpandedCategories((prev) => {
@@ -59,7 +62,7 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
     });
   };
 
-  // Ny funktion för att initiera och spela upp text
+  // Play phrase translation using speech synthesis
   const handlePlay = async (text: string) => {
     const ready = await initializeSpeech();
     if (ready) {
@@ -67,6 +70,7 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
     }
   };
 
+  // Order categories: first those in dynamicCats, then any extra categories
   const ordered = dynamicCats
     .map((c) => c.name)
     .filter((name) => groupedPhrases[name]);
@@ -77,6 +81,7 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
 
   return (
     <div className="phrase-list">
+      {/* Render each category group with expand/collapse and phrase list */}
       {renderCategories.map((category) => (
         <div key={category} className="category-group">
           <h3 className="category-header" onClick={() => handleCategoryClick(category)}>
@@ -84,6 +89,7 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
           </h3>
           {expandedCategories.has(category) && (
             <>
+              {/* Special case: show ItalianNumbers for 'Nummer' category */}
               {category === "Nummer" && <ItalianNumbers />}
               <ul className="phrase-items">
                 {groupedPhrases[category].map((phrase, idx) => (
@@ -92,12 +98,14 @@ const PhraseList: React.FC<PhraseListProps> = ({ phrases, categoryIcons, onEdit,
                       <strong>{phrase.original}</strong> - {phrase.translation}
                     </span>
                     <div>
+                      {/* Play translation using speech synthesis */}
                       <button
                         onClick={() => handlePlay(phrase.translation)}
                         className="play-button"
                       >
                         <FaVolumeUp />
                       </button>
+                      {/* Edit button if onEdit is provided */}
                       {onEdit && (
                         <button onClick={() => onEdit(phrase)} className="edit-button">
                           <FaEdit />

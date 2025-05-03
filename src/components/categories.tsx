@@ -1,17 +1,12 @@
-import {JSX, useState, useEffect } from "react";
+import {JSX} from "react";
 import categoriesJson from "../data/categories.json";
-import { getCategories, Category } from "../utils/phraseUtils";
+import { Category } from "../utils/phraseUtils";
+import { usePhrasebook } from "../context/PhrasebookContext";
 
-// Hook för att läsa in kategorier från IndexedDB
+// useCategories now uses categories from PhrasebookContext for reactivity and single source of truth
 export const useCategories = (): Category[] => {
-  const [cats, setCats] = useState<Category[]>([]);
-  useEffect(() => {
-    (async () => {
-      const loaded = await getCategories();
-      setCats(loaded);
-    })();
-  }, []);
-  return cats;
+  const { categories } = usePhrasebook();
+  return categories;
 };
 
 // Returnerar emoji-ikon för en kategori; fallback till JSON-data

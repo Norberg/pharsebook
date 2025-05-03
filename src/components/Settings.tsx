@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import "./Settings.css";
-import {
-  syncWithSupabase,
-  mergeWithSupabase,
-  applyLocalOnly,
-  applySupabaseOnly,
-  SyncDiff,
-} from "../utils/phraseUtils";
 import { supabase } from "../utils/supabaseClient"; // Importera klient (se nästa fil)
 import CategoryManager from "./CategoryManager";
+import { usePhrasebook } from "../context/PhrasebookContext";
 
 interface SettingsProps {
   onBack: () => void;
@@ -31,11 +25,20 @@ const Settings: React.FC<SettingsProps> = ({
   const [authMsg, setAuthMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [showCatMgr, setShowCatMgr] = useState(false);
-  const [syncDiff, setSyncDiff] = useState<SyncDiff | null>(null);
-  const [showSyncOptions, setShowSyncOptions] = useState(false);
-  const [syncChoice, setSyncChoice] = useState<"merge" | "local" | "supabase" | null>(null);
-  const [showSyncConfirm, setShowSyncConfirm] = useState(false);
-  const [syncLoading, setSyncLoading] = useState(false);
+
+  const {
+    refreshPhrases,
+    refreshCategories,
+    syncWithSupabase,
+    mergeWithSupabase,
+    applyLocalOnly,
+    applySupabaseOnly,
+  } = usePhrasebook();
+
+  // State for diff modal
+  const [diffResult, setDiffResult] = useState<any | null>(null);
+  const [showDiff, setShowDiff] = useState(false);
+  const [mergeLoading, setMergeLoading] = useState(false);
 
   // Hämta användare vid mount och på auth change
   useEffect(() => {
@@ -82,33 +85,7 @@ const Settings: React.FC<SettingsProps> = ({
     setShowConfirmation(false);
   };
 
-  const handleSyncClick = async () => {
-    setSyncLoading(true);
-    const diff = await syncWithSupabase();
-    setSyncLoading(false);
-    if (diff.same) {
-      alert("Allt är samma både lokalt och på Supabase.");
-    } else {
-      setSyncDiff(diff);
-      setShowSyncOptions(true);
-    }
-  };
 
-  const confirmSync = async () => {
-    setShowSyncConfirm(false);
-    setShowSyncOptions(false);
-    setSyncLoading(true);
-    if (syncChoice === "merge") await mergeWithSupabase();
-    if (syncChoice === "local") await applyLocalOnly();
-    if (syncChoice === "supabase") await applySupabaseOnly();
-    setSyncLoading(false);
-    onSync();                          // ← ny rad: refresha i‑minnet‑lista
-    alert("Synkronisering klar.");
-  };
-
-  const cancelSync = () => {
-    setShowSyncOptions(false);
-  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -134,6 +111,91 @@ const Settings: React.FC<SettingsProps> = ({
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);
+  };
+
+  // Helper function to render a structured diff view
+  function renderDiff(diffResult: any) {
+    if (!diffResult) return null;
+    const { localOnly = [], supabaseOnly = [], changed = [] } = diffResult;
+    return (
+      <div style={{ maxHeight: 400, overflow: 'auto', background: '#eee', padding: 10 }}>
+        {/* Local only section */}
+        <h4>Local only</h4>
+        {localOnly.length === 0 ? <div>None</div> : (
+          <ul>
+            {localOnly.map((p: any, i: number) => (
+              <li key={i}>
+                <strong>{p.original}</strong> - {p.translation} <em>({p.category})</em>
+              </li>
+            ))}
+          </ul>
+        )}
+        {/* Supabase only section */}
+        <h4>Supabase only</h4>
+        {supabaseOnly.length === 0 ? <div>None</div> : (
+          <ul>
+            {supabaseOnly.map((p: any, i: number) => (
+              <li key={i}>
+                <strong>{p.original}</strong> - {p.translation} <em>({p.category})</em>
+              </li>
+            ))}
+          </ul>
+        )}
+        {/* Changed section */}
+        <h4>Changed</h4>
+        {changed.length === 0 ? <div>None</div> : (
+          <ul>
+            {changed.map((pair: any, i: number) => (
+              <li key={i} style={{ marginBottom: 8 }}>
+                <div style={{ display: 'flex', gap: 16 }}>
+                  <div style={{ flex: 1 }}>
+                    <strong>Local:</strong><br />
+                    <span>{pair.local.original} - {pair.local.translation} <em>({pair.local.category})</em></span>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <strong>Supabase:</strong><br />
+                    <span>{pair.supabase.original} - {pair.supabase.translation} <em>({pair.supabase.category})</em></span>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  }
+
+  // Handler to show diff between local and Supabase
+  const handleShowDiff = async () => {
+    const diff = await syncWithSupabase();
+    setDiffResult(diff);
+    setShowDiff(true);
+  };
+
+  // Handler to merge local and Supabase
+  const handleMerge = async () => {
+    setMergeLoading(true);
+    await mergeWithSupabase();
+    setMergeLoading(false);
+    alert("Merge complete. Data is now synchronized.");
+    refreshPhrases();
+    refreshCategories();
+  };
+
+  // Handler to apply local only
+  const handleApplyLocalOnly = async () => {
+    await applyLocalOnly();
+    alert("Local data applied to Supabase.");
+    refreshPhrases();
+    refreshCategories();
+  };
+
+  // Handler to apply Supabase only
+  const handleApplySupabaseOnly = async () => {
+    await applySupabaseOnly();
+    alert("Supabase data applied locally.");
+    refreshPhrases();
+    refreshCategories();
   };
 
   return (
@@ -170,9 +232,7 @@ const Settings: React.FC<SettingsProps> = ({
         <button onClick={onSync}>Uppdatera nya fraser från grundutbudet</button>
         <button onClick={handleOverwriteClick}>Ersätt alla lokala fraser med grundutbudet</button>
         {user && (
-          <button onClick={handleSyncClick} disabled={syncLoading}>
-            {syncLoading ? "Laddar..." : "Synka med Supabase"}
-          </button>
+          <button onClick={handleShowDiff}>Visa diff mellan lokal och Supabase</button>
         )}
         <button
           onClick={() => {
@@ -184,67 +244,26 @@ const Settings: React.FC<SettingsProps> = ({
         </button>
       </div>
       {showCatMgr && <CategoryManager onClose={() => setShowCatMgr(false)} />}
-      {showSyncOptions && syncDiff && (
-        <div className="sync-dialog">
-          <p>
-            Nya lokala: {syncDiff.localOnly.length}, nya på Supabase: {syncDiff.supabaseOnly.length}, ändrade: {syncDiff.changed.length}
-          </p>
-          <ul>
-            {syncDiff.localOnly.slice(0, 10).map((p, i) => (
-              <li key={`local-${i}`}>
-               <b>(Lokal)</b> {p.original} – {p.translation} 
-              </li>
-            ))}
-            {syncDiff.supabaseOnly.slice(0, 10).map((p, i) => (
-              <li key={`supa-${i}`}>
-                <b>(Supabase)</b> {p.original} – {p.translation}
-              </li>
-            ))}
-            {syncDiff.changed.slice(0, 10).map(({ local, supabase }, i) => (
-              <li key={`changed-${i}`}>
-                <b>(Ändrad)</b> {local.original} – {local.translation}: kategori  <b>(Lokal)</b> "{local.category}", <b>(Supabase)</b> "{supabase.category}"
-              </li>
-            ))}
-          </ul>
-          <button
-            onClick={() => {
-              setSyncChoice("merge");
-              setShowSyncConfirm(true);
-            }}
-          >
-            Slåihop
-          </button>
-          <button
-            onClick={() => {
-              setSyncChoice("local");
-              setShowSyncConfirm(true);
-            }}
-          >
-            Välj lokala
-          </button>
-          <button
-            onClick={() => {
-              setSyncChoice("supabase");
-              setShowSyncConfirm(true);
-            }}
-          >
-            Välj Supabase
-          </button>
-          <button onClick={cancelSync}>Avbryt</button>
-        </div>
-      )}
-      {showSyncConfirm && (
-        <div className="confirmation-dialog">
-          <p>Är du säker att du vill fortsätta?</p>
-          <button onClick={confirmSync}>Ja</button>
-          <button onClick={() => setShowSyncConfirm(false)}>Nej</button>
-        </div>
-      )}
       {showConfirmation && (
         <div className="confirmation-dialog">
           <p>Är du säker på att du vill skriva över och tabort {phraseCount} fraser?</p>
           <button onClick={confirmOverwrite}>Ja</button>
           <button onClick={cancelOverwrite}>Nej</button>
+        </div>
+      )}
+      {/* Diff Modal */}
+      {showDiff && diffResult && (
+        <div className="diff-modal">
+          <h3>Diff mellan lokal och Supabase</h3>
+          {renderDiff(diffResult)}
+          <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+            <button onClick={handleMerge} disabled={mergeLoading}>
+              {mergeLoading ? "Sammanfogar..." : "Merge lokal & Supabase"}
+            </button>
+            <button onClick={handleApplyLocalOnly}>Skriv över Supabase med lokala data</button>
+            <button onClick={handleApplySupabaseOnly}>Skriv över lokalt med Supabase-data</button>
+            <button onClick={() => setShowDiff(false)}>Stäng</button>
+          </div>
         </div>
       )}
       <footer className="build-info">

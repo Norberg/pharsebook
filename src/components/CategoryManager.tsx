@@ -1,33 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./CategoryManager.css";
 import ReactDOM from "react-dom";
-import {
-  getCategories,
-  addCategory,
-  updateCategory,
-  removeCategory,
-  Phrase,
-  getPhrases,
-} from "../utils/phraseUtils";
+import { usePhrasebook } from "../context/PhrasebookContext";
+import { Category } from "../utils/phraseUtils";
 
 interface Props { onClose: () => void; }
 
 const CategoryManager: React.FC<Props> = ({ onClose }) => {
-  const [cats, setCats] = useState<any[]>([]);
+  const {
+    addCategory,
+    updateCategory,
+    removeCategory,
+    phrases,
+    refreshCategories,
+    refreshPhrases,
+  } = usePhrasebook();
+  // Add state for categories at the top of the component
+  const [cats, setCats] = useState<Category[]>([]);
   const [newName, setNewName] = useState("");
   const [newIcon, setNewIcon] = useState("");
-  const [phrases, setPhrases] = useState<Phrase[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      setCats(await getCategories());
-      setPhrases(await getPhrases());
-    })();
-  }, []);
 
   const reload = async () => {
-    setCats(await getCategories());
-    setPhrases(await getPhrases());
+    await refreshCategories();
+    await refreshPhrases();
   };
 
   const handleAdd = async () => {

@@ -8,6 +8,7 @@ interface Props { onClose: () => void; }
 
 const CategoryManager: React.FC<Props> = ({ onClose }) => {
   const {
+    categories,
     addCategory,
     updateCategory,
     removeCategory,
@@ -16,7 +17,12 @@ const CategoryManager: React.FC<Props> = ({ onClose }) => {
     refreshPhrases,
   } = usePhrasebook();
   // Add state for categories at the top of the component
-  const [cats, setCats] = useState<Category[]>([]);
+  const [cats, setCats] = useState<Category[]>(categories);
+
+  React.useEffect(() => {
+    setCats(categories);
+  }, [categories]);
+
   const [newName, setNewName] = useState("");
   const [newIcon, setNewIcon] = useState("");
 

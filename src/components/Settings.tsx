@@ -140,7 +140,7 @@ const Settings: React.FC<SettingsProps> = ({
     if (!diffResult) return null;
     const { localOnly = [], supabaseOnly = [], changed = [] } = diffResult;
     return (
-      <div style={{ maxHeight: 400, overflow: 'auto', background: '#eee', padding: 10 }}>
+      <div>
         {/* Local only section */}
         <h4>Local only</h4>
         {localOnly.length === 0 ? <div>None</div> : (
@@ -287,7 +287,7 @@ const Settings: React.FC<SettingsProps> = ({
         <div className="diff-modal">
           <h3>Diff mellan lokal och Supabase</h3>
           {renderDiff(diffResult)}
-          <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+          <div style={{ gap: 8, marginTop: 16 }}>
             <button onClick={handleMerge} disabled={mergeLoading}>
               {mergeLoading ? "Sammanfogar..." : "Merge lokal & Supabase"}
             </button>

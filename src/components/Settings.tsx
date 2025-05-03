@@ -12,6 +12,12 @@ interface SettingsProps {
   onOverwrite: () => Promise<{ removedCount: number; addedCount: number }>;
 }
 
+enum ConfirmationType {
+  All = "all",
+  Local = "local",
+  Supabase = "supabase"
+}
+
 const Settings: React.FC<SettingsProps> = ({
   onBack,
   onExport,
@@ -19,6 +25,7 @@ const Settings: React.FC<SettingsProps> = ({
   onOverwrite,
 }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [confirmationType, setConfirmationType] = useState<ConfirmationType | null>(null);
   const [phraseCount, setPhraseCount] = useState(0);
   const [email, setEmail] = useState("");
   const [user, setUser] = useState<any>(null);
@@ -58,6 +65,7 @@ const Settings: React.FC<SettingsProps> = ({
   const handleOverwriteClick = async () => {
     const { removedCount } = await onOverwrite();
     setPhraseCount(removedCount);
+    setConfirmationType(ConfirmationType.All);
     setShowConfirmation(true);
   };
 
@@ -77,12 +85,26 @@ const Settings: React.FC<SettingsProps> = ({
     }
   };
 
-  const confirmOverwrite = () => {
+  // Bekräfta åtgärd beroende på typ
+  const confirmOverwrite = async () => {
     setShowConfirmation(false);
+    if (confirmationType === ConfirmationType.Local) {
+      await applyLocalOnly();
+      alert("Local data applied to Supabase.");
+      refreshPhrases();
+      refreshCategories();
+    } else if (confirmationType === ConfirmationType.Supabase) {
+      await applySupabaseOnly();
+      alert("Supabase data applied locally.");
+      refreshPhrases();
+      refreshCategories();
+    } // ConfirmationType.All hanteras redan i handleOverwriteClick
+    setConfirmationType(null);
   };
 
   const cancelOverwrite = () => {
     setShowConfirmation(false);
+    setConfirmationType(null);
   };
 
 
@@ -182,20 +204,16 @@ const Settings: React.FC<SettingsProps> = ({
     refreshCategories();
   };
 
-  // Handler to apply local only
-  const handleApplyLocalOnly = async () => {
-    await applyLocalOnly();
-    alert("Local data applied to Supabase.");
-    refreshPhrases();
-    refreshCategories();
+  // Handler to apply local only (visa bekräftelse först)
+  const handleApplyLocalOnly = () => {
+    setConfirmationType(ConfirmationType.Local);
+    setShowConfirmation(true);
   };
 
-  // Handler to apply Supabase only
-  const handleApplySupabaseOnly = async () => {
-    await applySupabaseOnly();
-    alert("Supabase data applied locally.");
-    refreshPhrases();
-    refreshCategories();
+  // Handler to apply Supabase only (visa bekräftelse först)
+  const handleApplySupabaseOnly = () => {
+    setConfirmationType(ConfirmationType.Supabase);
+    setShowConfirmation(true);
   };
 
   return (
@@ -227,6 +245,26 @@ const Settings: React.FC<SettingsProps> = ({
           <button onClick={handleLogout}>Logga ut</button>
         </div>
       )}
+      {/* Flytta dialogen så den visas ovanför allt */}
+      {showConfirmation && (
+        <div className="confirmation-dialog">
+          <p className="confirmation-dialog-text">
+            {confirmationType === ConfirmationType.All && (
+              <>Är du säker på att du vill skriva över och ta bort {phraseCount} fraser?</>
+            )}
+            {confirmationType === ConfirmationType.Local && (
+              <>Är du säker på att du vill skriva över Supabase med lokala data?</>
+            )}
+            {confirmationType === ConfirmationType.Supabase && (
+              <>Är du säker på att du vill skriva över lokala data med Supabase?</>
+            )}
+          </p>
+          <div className="confirmation-dialog-buttons">
+            <button onClick={confirmOverwrite}>Ja</button>
+            <button onClick={cancelOverwrite}>Nej</button>
+          </div>
+        </div>
+      )}
       <div className="settings-buttons">
         <button onClick={handleExportClick}>Exportera fraser</button>
         <button onClick={onSync}>Uppdatera nya fraser från grundutbudet</button>
@@ -244,13 +282,6 @@ const Settings: React.FC<SettingsProps> = ({
         </button>
       </div>
       {showCatMgr && <CategoryManager onClose={() => setShowCatMgr(false)} />}
-      {showConfirmation && (
-        <div className="confirmation-dialog">
-          <p>Är du säker på att du vill skriva över och tabort {phraseCount} fraser?</p>
-          <button onClick={confirmOverwrite}>Ja</button>
-          <button onClick={cancelOverwrite}>Nej</button>
-        </div>
-      )}
       {/* Diff Modal */}
       {showDiff && diffResult && (
         <div className="diff-modal">

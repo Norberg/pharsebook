@@ -1,3 +1,26 @@
+/* Play button for audio (icon-only, minimal, inline, no background) */
+.play-button {
+  background: none;
+  border: none;
+  color: #007bff;
+  padding: 0 4px;
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.play-button:hover,
+.play-button:focus {
+  color: #0056b3;
+  outline: none;
+}
+
+.play-button:active {
+  color: #003f7f;
+}
 body {
   margin: 0;
   font-family: Arial, sans-serif;

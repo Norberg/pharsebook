@@ -1,4 +1,5 @@
 import React from "react";
+import { FaVolumeUp } from "react-icons/fa";
 
 const ItalianNumbers: React.FC = () => {
   const entries: [string, string][] = [
@@ -79,7 +80,7 @@ const ItalianNumbers: React.FC = () => {
       const cent = decNum === 1 ? "centesimo" : "centesimi";
       currency = `${toItalian(intNum)} ${euro}`;
       if (decNum > 0) {
-        currency += ` e ${toItalian(decNum)} ${cent}`;
+        currency = `${toItalian(intNum)} ${euro} e ${toItalian(decNum)} ${cent}`;
       }
     }
     return { text: result, currency };
@@ -147,7 +148,18 @@ const ItalianNumbers: React.FC = () => {
       <ul className="numbers-list">
         {entries.map(([num, name]) => (
           <li key={num}>
-            {num} – {name}
+            <strong>{num}</strong> – {name}
+            <button
+              className="play-button"
+              title={`Spela upp ${name}`}
+              onClick={async () => {
+                const mod = await import('../utils/speechUtils');
+                const ready = await mod.initializeSpeech();
+                if (ready) mod.speakText(name, 'it-IT');
+              }}
+            >
+              <FaVolumeUp style={{ fontSize: 18, color: '#333' }} />
+            </button>
           </li>
         ))}
       </ul>
@@ -164,9 +176,35 @@ const ItalianNumbers: React.FC = () => {
       {result && (
         <div style={{ marginTop: "0.5em" }}>
           <strong>Tal:</strong> {result.text}
+          <button
+            className="play-button"
+            title="Spela upp talet"
+            onClick={async () => {
+              const mod = await import('../utils/speechUtils');
+              const ready = await mod.initializeSpeech();
+              if (ready) mod.speakText(result.text, 'it-IT');
+            }}
+          >
+            <FaVolumeUp style={{ fontSize: 18, color: '#333' }} />
+          </button>
           {result.currency && (
-            <div><strong>Valuta:</strong> {result.currency}</div>
+            <div style={{ marginTop: 4 }}>
+              <strong>Valuta:</strong> {result.currency}
+              <button
+                className="play-button"
+                style={{ marginLeft: 8, display: 'inline-flex', alignItems: 'center', padding: 0 }}
+                title="Spela upp valutatext"
+                onClick={async () => {
+                  const mod = await import('../utils/speechUtils');
+                  const ready = await mod.initializeSpeech();
+                  if (ready) mod.speakText(result.currency!, 'it-IT');
+                }}
+              >
+                <FaVolumeUp style={{ fontSize: 18, color: '#333' }} />
+              </button>
+            </div>
           )}
+
         </div>
       )}
     </>

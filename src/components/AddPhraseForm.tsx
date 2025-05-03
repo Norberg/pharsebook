@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Phrase, Category } from "../utils/phraseUtils";
+import { Phrase, Category } from "../utils/storageUtils";
 import { useCategories } from "./categories";
 import "./AddPhraseForm.css";
 

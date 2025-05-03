@@ -8,7 +8,7 @@ import Settings from "./components/Settings";
 import { useCategories, getCategoryIcon } from "./components/categories";
 import { FaCog } from "react-icons/fa";
 import { usePhrasebook } from "./context/PhrasebookContext";
-import { Phrase } from "./utils/phraseUtils";
+import { Phrase } from "./utils/storageUtils";
 
 const App = () => {
   const {

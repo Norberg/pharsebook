@@ -1,6 +1,6 @@
 import {JSX} from "react";
 import categoriesJson from "../data/categories.json";
-import { Category } from "../utils/phraseUtils";
+import { Category } from "../utils/storageUtils";
 import { usePhrasebook } from "../context/PhrasebookContext";
 
 // useCategories now uses categories from PhrasebookContext for reactivity and single source of truth

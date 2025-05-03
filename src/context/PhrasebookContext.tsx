@@ -14,7 +14,7 @@ import {
   mergeWithSupabase,
   applyLocalOnly,
   applySupabaseOnly,
-} from "../utils/phraseUtils";
+} from "../utils/storageUtils";
 
 // Context value type
 export type PhrasebookContextType = {

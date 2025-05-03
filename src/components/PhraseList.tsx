@@ -1,5 +1,5 @@
 import React, { useState, useEffect, JSX } from "react";
-import { Phrase } from "../utils/phraseUtils";
+import { Phrase } from "../utils/storageUtils";
 import { FaEdit, FaVolumeUp } from "react-icons/fa"; // lägg till ikon
 import { useCategories } from "./categories";
 import { initializeSpeech, speakText } from "../utils/speechUtils"; // import speechUtils

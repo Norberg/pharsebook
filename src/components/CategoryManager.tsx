@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./CategoryManager.css";
 import ReactDOM from "react-dom";
 import { usePhrasebook } from "../context/PhrasebookContext";
-import { Category } from "../utils/phraseUtils";
+import { Category } from "../utils/storageUtils";
 
 interface Props { onClose: () => void; }
 

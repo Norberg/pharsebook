@@ -378,7 +378,7 @@ export const addPhrase = async (phrase: Omit<Phrase, 'compositeKey'>): Promise<v
       if (error.name !== 'ConstraintError') {
            throw error;
       } else {
-          console.warn(`Phrase with key "${phraseWithKey.compositeKey}" already exists locally.`);
+          console.warn(`Phrase with key \"${phraseWithKey.compositeKey}\" already exists locally.`);
           // Consider updating instead if desired
           // await updatePhrase(phraseWithKey);
       }
@@ -416,9 +416,9 @@ export const removePhrase = async (phrase: Phrase): Promise<void> => {
   const { compositeKey: key } = ensureCompositeKey(phrase);
   try {
     await db.delete(STORE_NAME, key!);
-    console.log(`Phrase with key "${key}" removed locally.`);
+    console.log(`Phrase with key \"${key}\" removed locally.`);
   } catch(error) {
-    console.error(`Error removing phrase with key "${key}" locally:`, error);
+    console.error(`Error removing phrase with key \"${key}\" locally:`, error);
     throw error;
   }
 };

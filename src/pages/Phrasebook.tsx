@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import SearchBar from "../components/SearchBar";
-import { getPhrases, Phrase } from "../utils/phraseUtils";
+import { getPhrases, Phrase } from "../utils/storageUtils";
 
 const Phrasebook: React.FC = () => {
   const [phrases, setPhrases] = useState<Phrase[]>([]);

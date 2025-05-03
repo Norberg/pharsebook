@@ -1,5 +1,7 @@
+
 import React from "react";
 import { FaVolumeUp } from "react-icons/fa";
+import { initializeSpeech, speakText } from "../utils/speechUtils";
 
 const ItalianNumbers: React.FC = () => {
   const entries: [string, string][] = [
@@ -43,7 +45,7 @@ const ItalianNumbers: React.FC = () => {
   // State for the input field (digits only)
   const [input, setInput] = React.useState("");
   // State for the result (Italian number text and currency or null)
-  const [result, setResult] = React.useState<{text: string, currency?: string} | null>(null);
+  const [result, setResult] = React.useState<{ text: string, currency?: string } | null>(null);
 
 
   // Create a map for fast lookup of numbers that have a direct translation in the list
@@ -61,14 +63,14 @@ const ItalianNumbers: React.FC = () => {
    * @param value The number or string to convert
    * @returns The Italian text for the number, or "Okänt tal" if out of range
    */
-  function toItalianWithDecimals(value: string): {text: string, currency?: string} {
+  function toItalianWithDecimals(value: string): { text: string, currency?: string } {
     if (!value) return { text: "" };
     // Split integer and decimal part
     const [intPart, decPart] = value.split(/[,\.]/);
     const intNum = parseInt(intPart, 10);
     if (isNaN(intNum)) return { text: "Okänt tal" };
     let result = toItalian(intNum);
-    let currency = undefined;
+    let currency: string | undefined = undefined;
     if (decPart && decPart.length > 0) {
       // Only support up to 2 decimals
       const dec = decPart.slice(0, 2).padEnd(2, '0');
@@ -134,7 +136,7 @@ const ItalianNumbers: React.FC = () => {
     // Only allow one comma or dot
     val = val.replace(/([.,]).*\1/, '$1');
     // Limit to 2 decimals if present
-    val = val.replace(/([.,])(\d{0,2})\d*$/, (m, sep, dec) => sep + dec);
+    val = val.replace(/([.,])(\d{0,2})\d*$/, (_match, sep, dec) => sep + dec);
     setInput(val);
     if (val) {
       setResult(toItalianWithDecimals(val));
@@ -153,12 +155,11 @@ const ItalianNumbers: React.FC = () => {
               className="play-button"
               title={`Spela upp ${name}`}
               onClick={async () => {
-                const mod = await import('../utils/speechUtils');
-                const ready = await mod.initializeSpeech();
-                if (ready) mod.speakText(name, 'it-IT');
+                const ready = await initializeSpeech();
+                if (ready) speakText(name, 'it-IT');
               }}
             >
-              <FaVolumeUp style={{ fontSize: 18, color: '#333' }} />
+              <FaVolumeUp />
             </button>
           </li>
         ))}
@@ -180,27 +181,24 @@ const ItalianNumbers: React.FC = () => {
             className="play-button"
             title="Spela upp talet"
             onClick={async () => {
-              const mod = await import('../utils/speechUtils');
-              const ready = await mod.initializeSpeech();
-              if (ready) mod.speakText(result.text, 'it-IT');
+              const ready = await initializeSpeech();
+              if (ready) speakText(result.text, 'it-IT');
             }}
           >
-            <FaVolumeUp style={{ fontSize: 18, color: '#333' }} />
+            <FaVolumeUp />
           </button>
           {result.currency && (
             <div style={{ marginTop: 4 }}>
               <strong>Valuta:</strong> {result.currency}
               <button
                 className="play-button"
-                style={{ marginLeft: 8, display: 'inline-flex', alignItems: 'center', padding: 0 }}
                 title="Spela upp valutatext"
                 onClick={async () => {
-                  const mod = await import('../utils/speechUtils');
-                  const ready = await mod.initializeSpeech();
-                  if (ready) mod.speakText(result.currency!, 'it-IT');
+                  const ready = await initializeSpeech();
+                  if (ready) speakText(result.currency!, 'it-IT');
                 }}
               >
-                <FaVolumeUp style={{ fontSize: 18, color: '#333' }} />
+                <FaVolumeUp />
               </button>
             </div>
           )}
